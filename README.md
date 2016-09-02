@@ -6,10 +6,11 @@
   
   All yo need to do:
     
+    $ git clone https://github.com/johanjerger/btt-c-game.git
     $ make
     $ make install
     
-  NOTE ##
+    NOTE
     
     If you are in Windows you need to change the system call <System("clear")> for <System("cls")> .
     

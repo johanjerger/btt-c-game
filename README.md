@@ -1,8 +1,8 @@
 # btt-c-game
   
-  btt is a little c game, when you can see some basic concepts of this lenguage.
+  btt is a little c game, where you can see some basic concepts of this lenguage.
   
-# Installation
+## Installation
   
   All yo need to do:
     

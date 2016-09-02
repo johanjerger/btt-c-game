@@ -2,7 +2,7 @@
   
   btt is a little c game, where you can see some basic concepts of this lenguage.
   
-# Installation
+## Installation
   
   All yo need to do:
     

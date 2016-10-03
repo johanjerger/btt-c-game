@@ -75,18 +75,18 @@
 		}
 		for(i = 0; i < len; i++){
 			j = arr_en[i];
-			area[enem[j].pos].c = ' ';
+			area[enem[j].pos - i].c = ' ';
 			if(i < MC - 1){
-				for(k = j; k < *cnt_enem; k++){
+				for(k = j; k < (*cnt_enem)-1; k++){
 					enem[k].pos = enem[k+1].pos;
 					enem[k].der = enem[k+1].der;
 				}
 			}
 			(*cnt_enem)--;
 			j = arr_sh[i];
-			area[shots[j].pos].c = ' ';
+			area[shots[j].pos - i].c = ' ';
 			if(i < handicap - 1){
-				for(k = j; k < *cnt_shots; k++){
+				for(k = j; k < (*cnt_shots)-1; k++){
 					shots[k].pos = shots[k+1].pos;
 					shots[k].der = shots[k+1].der;
 				}

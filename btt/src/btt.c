@@ -43,15 +43,14 @@
 		int level = 1, enem_level = 100, e_l = 100, time = 125;
 		char cheat[CH];
 		fireball ball;
+		struct timespec ts;
+	  	ts.tv_sec = time / 1000;
+	  	ts.tv_nsec = (time % 1000) * 1000000;
 
 		for(i = 0; i < CH - 1; i++) cheat[i] = ' ';
 		cheat[CH-1]= '\0';
 
 		for(i = 0; i < L; i++) c_shots[i] = 0, c_enem[i] = 0;
-
-		struct timespec ts;
-	  	ts.tv_sec = time / 1000;
-	  	ts.tv_nsec = (time % 1000) * 1000000;
 
 		switch(*dif){
 		case '1': 
@@ -184,7 +183,7 @@
 							exit(ERR_SYS);
 						}
 						printf("Are you sure?[Y/N]\n");
-						if(((c = getch()) == 'Y') || (c == 'y')){
+						if(((c = getch()) == 'Y') || (c == 10) || (c == 'y')){
 							quit = 1;
 							*dif = 'a';
 						}
@@ -194,7 +193,7 @@
 					if((system("clear")) == -1) exit(ERR_SYS);
 					
 					printf("Are you sure?[Y/N]\n");
-					if(((c = getch()) == 'Y') || (c == 'y')){
+					if(((c = getch()) == 'Y') || (c == 10) || (c == 'y')){
 						quit = 1;
 						*dif = 'a';
 					}
@@ -266,53 +265,4 @@
 
 		return pnt;
 	}
-
-	int main()
-	{
-		int result = 0;
-		int dif;
-		int i;
-		char pj;
-
-		struct timespec ts;
-	  	ts.tv_sec = 3000 / 1000;
-	  	ts.tv_nsec = (3000 % 1000) * 1000000;
-
-		block_arr area;
-		for(i=0; i < L; i++){
-			initialize_area(area[i]);
-		}
-
-		do{
-			dif = menu();
-
-			if(dif != 'q'){
-				pj = select_pj();
-				result = game(area, &dif, pj);
-				
-				if((system("clear")) == -1) exit(ERR_SYS);
-
-				printf("\t\t\tGAME OVER\n\tScore : %d\n\n", result);
-				
-				if((nanosleep(&ts, NULL)) == -1){
-					fprintf(stderr, "error -> %d\n", errno);
-					exit(ERR_SYS);
-				}
-				
-				is_high_score(result);
-				
-				if((nanosleep(&ts, NULL)) == -1){
-					fprintf(stderr, "error -> %d\n", errno);
-					exit(ERR_SYS);
-				}
-
-
-				for(i=0; i < L; i++){
-					initialize_area(area[i]);
-				}
-			}
-
-		} while((dif != 'q'));
-
-		return 0;
-	}
+	

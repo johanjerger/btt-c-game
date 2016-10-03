@@ -30,6 +30,63 @@
 #include "include/types.h"
 
 
+	static int score_tab()
+	{
+		FILE * score_tb;
+		score imp_table[TB];
+		score sc;
+		int i, c;
+
+
+		if((system("clear")) == -1) exit(ERR_SYS);
+		if((score_tb = fopen("scoreTab", "r+")) == NULL){
+			score_tb = fopen("scoreTab", "w+");
+			for(i = 0; i < TB; i++){
+				strcpy(sc.name, " ----- ");
+				sc.point = 0;
+				fwrite(&sc.name, sizeof(sc.name), 1, score_tb);
+				fwrite(&sc.point, sizeof(sc.point), 1, score_tb);
+			}
+			rewind(score_tb);
+		}
+
+		for(i = 0; i < TB; i++){
+			if((fread(&sc.name, 1, sizeof(sc.name), score_tb)) == 0){
+				fprintf(stderr, "error -> %d\n", EIO);
+				exit(ERR_READ_FILE);
+			}
+	        if((fread(&sc.point, 1, sizeof(sc.point), score_tb)) == 0){
+	        	fprintf(stderr, "error -> %d\n", EIO);
+	        	exit(ERR_READ_FILE);
+	        }
+	        imp_table[i] = sc;
+		}
+		
+		printf("               SCORE TAB\n\n");
+		for(i = 0; i < TB; i++){
+			printf("%-15s ------ %15d\n", imp_table[i].name, imp_table[i].point);
+		}
+
+		fclose(score_tb);
+
+		printf("\n\n\t'c' ~> Clean score tab");
+		printf("\n\tENTER ~> menu\n");
+		if((c = getchar()) == 'c'){
+			getchar();
+			score_tb = fopen("scoreTab", "w+");
+			for(i = 0; i < TB; i++){
+				strcpy(sc.name, " ----- ");
+				sc.point = 0;
+				fwrite(&sc.name, sizeof(sc.name), 1, score_tb);
+				fwrite(&sc.point, sizeof(sc.point), 1, score_tb);
+			}
+			fclose(score_tb);
+		}
+
+		return 0;
+	}
+
+
 	int getch(void)
 	{
 		struct termios oldattr, newattr;
@@ -77,7 +134,7 @@
 
 		if((system("clear")) == -1) exit(ERR_SYS);
 		
-		printf("Main Menu :\n\n\t1 -> Easy\n\t2 -> Normal\n\t3 -> Hard\n\t4 -> Very Hard\n\tt -> Tutorial\n\th -> History\n\tq -> exit\n\n");
+		printf("Main Menu :\n\n\t1 ~> Easy\n\t2 ~> Normal\n\t3 ~> Hard\n\t4 ~> Very Hard\n\tt ~> Tutorial\n\th ~> History\n\ts ~> Score Tab\n\tq ~> exit\n\n\t\t\t\t\t\tversion: 0.1\n\n");
 		dif = getch();
 		switch(dif){
 		case '1': 
@@ -94,22 +151,22 @@
 			break;
 		case 't': 
 			if((system("clear")) == -1) exit(ERR_SYS);
-
-			printf("\t TUTORIAL\n\n\t'a' -> Left\n\t'd' -> Right\n\t'w' -> Up\n\t's' -> Down\n\t'k' -> shots\n\t'q' -> quit\n");
-			printf("\n\n\tPress ENTER\n");
+			printf("\t TUTORIAL\n\n\t'a' ~> Left\n\t'd' ~> Right\n\t'w' ~> Up\n\t's' ~> Down\n\t'k' ~> shots\n\t'q' ~> quit\n\n\n\tPress ENTER\n");
 			getchar();
 			if((system("clear")) == -1) exit(ERR_SYS);
-
 			dif = menu();
 			break;
 		case 'h': 
 			if((system("clear")) == -1)	exit(ERR_SYS);
 			
-			printf("\tIn the year 2057, an UFO descended\n\ton planet earth, infecting the entire\n\tplanet with cannibal orphans with\n\tcold and mean feelings as a\n\tdead elephant.\n\tYou are the choosen one to\n\tdefend the planet from evil\n\tcannibal orphans.\n\tGrab your weaponds and go for\n\tthem!\n");
-			printf("\n\n\tPress ENTER\n");
+			printf("\n\tIn the year 2057, an UFO descended\n\ton planet earth, infecting the entire\n\tplanet with cannibal orphans with cold\n\tand mean feelings as a dead elephant.\n\n\tYou are the choosen one to defend\n\tthe planet from evil cannibal orphans.\n\n\tGrab your weaponds and go for them!\n\n\n\tPress ENTER\n");
 			getchar();
 			if((system("clear")) == -1) exit(ERR_SYS);
 	
+			dif = menu();
+			break;
+		case 's':
+			score_tab();
 			dif = menu();
 			break;
 		case 'q':
@@ -135,7 +192,7 @@
 		if((system("clear")) == -1)	exit(ERR_SYS);
 
 		printf("Select your Character:\n");
-		printf("\n\t1 -> *\n\t2 -> %c\n\t3 -> +\n\n", 126);
+		printf("\n\t1 ~> *\n\t2 ~> %c\n\t3 ~> +\n\n", 126);
 		c = getch();
 		switch(c){
 			case '1':
@@ -204,6 +261,9 @@
 		char aux[256], aux_name[256];
 		int i, j, c, pos = TB, aux_score;
 
+		printf("\n\t\t\tPRESS ENTER\n");
+		while((getchar())!='\n');
+
 		if((score_tb = fopen("scoreTab", "r+")) == NULL){
 			score_tb = fopen("scoreTab", "w+");
 			for(i = 0; i < TB; i++){
@@ -229,11 +289,11 @@
 
 		aux[0] = ' ';
 
-		for(i = 1, j = 1; i < TB; i++){
+		for(i = 0, j = 1; i < TB; i++){
 			if(point >= imp_table[i].point){
 				pos = i;
 				printf("Congrats your score is the number %d of the list\n", i+1);
-				printf("Put your name : \n");
+				printf("Put your name [10 char] : \n");
 				while(((c = getchar()) != 10) && (j < 10)){
 					aux[j++] = c;
 				}

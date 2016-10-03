@@ -12,6 +12,7 @@ all: folders main.o $(TEMPORAL_FOLDER) $(BUILD_FOLDER)
 	    gcc $(TEMPORAL_FOLDER)/** -o $(BUILD_FOLDER)/btt $(CFLAG) $(DEBUG)
 
 main.o: 
+		gcc -c $(SOURCE_FOLDER)/main.c -o $(TEMPORAL_FOLDER)/main.o $(CFLAG) $(DEBUG)
 		gcc -c $(SOURCE_FOLDER)/btt.c -o $(TEMPORAL_FOLDER)/btt.o $(CFLAG) $(DEBUG)
 		gcc -c $(SOURCE_FOLDER)/function.c -o $(TEMPORAL_FOLDER)/function.o $(CFLAG) $(DEBUG)
 		gcc -c $(SOURCE_FOLDER)/verify.c -o $(TEMPORAL_FOLDER)/verify.o $(CFLAG) $(DEBUG)

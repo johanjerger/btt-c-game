@@ -39,7 +39,7 @@
 		int act = A/2, act_lv = 1;
 		int c_shots[L], c_enem[L];
 		int pnt = 0, num = 5, quit = 0, dif_n = 0, enem_n = 0, handicap = 0, der = 0;
-		int is_cheat = 0, cheat_t, is_fb = 0;
+		int is_cheat = 0, cheat_t, is_fb = 0, time_sleep = 0;
 		int level = 1, enem_level = 100, e_l = 100, time = 125;
 		char cheat[CH];
 		fireball ball;
@@ -112,7 +112,21 @@
 							}
 							move_shots(area[i], shots[i], &(c_shots[i]));
 							move_enem(area[i], enem[i], &(c_enem[i]));
-							generate_enemies(area[i], enem[i], &(c_enem[i]), &num, &enem_level, &e_l, &time, &level,enem_n);
+							if(time_sleep == 0){
+								generate_enemies(area[i], enem[i], &(c_enem[i]), &num, &enem_level, &e_l, &time, &level ,enem_n, &time_sleep);
+							} else {
+								time_sleep--;
+								if(time_sleep == 500){
+									area[L/2][(A/2)-3].c = 'L';
+									area[L/2][(A/2)-2].c = 'E';
+									area[L/2][(A/2)-1].c = 'V';
+									area[L/2][(A/2)].c = 'E';
+									area[L/2][(A/2)+1].c = 'L';
+									area[L/2][(A/2)+2].c = ' ';
+									area[L/2][(A/2)+3].c = 'U';
+									area[L/2][(A/2)+4].c = 'P';
+								}
+							}
 							pnt += verify_shots(area[i], enem[i], shots[i], &(c_enem[i]), &(c_shots[i]), handicap);
 							if(is_fb == i){
 								if(i < L-1){
@@ -137,7 +151,21 @@
 							}
 							move_shots(area[i], shots[i], &(c_shots[i]));
 							move_enem(area[i], enem[i], &(c_enem[i]));
-							generate_enemies(area[i], enem[i], &(c_enem[i]), &num, &enem_level, &e_l, &time, &level,enem_n);
+							if(time_sleep == 0){
+								generate_enemies(area[i], enem[i], &(c_enem[i]), &num, &enem_level, &e_l, &time, &level ,enem_n, &time_sleep);
+							} else {
+								time_sleep--;
+								if(time_sleep == 500){
+									area[L/2][(A/2)-3].c = 'L';
+									area[L/2][(A/2)-2].c = 'E';
+									area[L/2][(A/2)-1].c = 'V';
+									area[L/2][(A/2)].c = 'E';
+									area[L/2][(A/2)+1].c = 'L';
+									area[L/2][(A/2)+2].c = ' ';
+									area[L/2][(A/2)+3].c = 'U';
+									area[L/2][(A/2)+4].c = 'P';
+								}
+							}
 							pnt += verify_shots(area[i], enem[i], shots[i], &(c_enem[i]), &(c_shots[i]), handicap);
 							if(is_fb == i){
 								if(i < L-1){
@@ -213,7 +241,23 @@
 						}
 						move_shots(area[i], shots[i], &(c_shots[i]));
 						move_enem(area[i], enem[i], &(c_enem[i]));
-						generate_enemies(area[i], enem[i], &(c_enem[i]), &num, &enem_level, &e_l, &time, &level ,enem_n);
+						
+						if(time_sleep == 0){
+							generate_enemies(area[i], enem[i], &(c_enem[i]), &num, &enem_level, &e_l, &time, &level ,enem_n, &time_sleep);
+						} else {
+							time_sleep--;
+							if(time_sleep == 500){
+								area[L/2][(A/2)-3].c = 'L';
+								area[L/2][(A/2)-2].c = 'E';
+								area[L/2][(A/2)-1].c = 'V';
+								area[L/2][(A/2)].c = 'E';
+								area[L/2][(A/2)+1].c = 'L';
+								area[L/2][(A/2)+2].c = ' ';
+								area[L/2][(A/2)+3].c = 'U';
+								area[L/2][(A/2)+4].c = 'P';
+							}
+						}
+
 						pnt += verify_shots(area[i], enem[i], shots[i], &(c_enem[i]), &(c_shots[i]), handicap);
 						if(is_fb == i){
 							if(i < L-1){
@@ -259,6 +303,8 @@
 					fprintf(stderr, "error -> %d\n", errno);
 					exit(ERR_SYS);
 				}
+			} else {
+				time_sleep--;
 			}
 
 		} while(!quit);

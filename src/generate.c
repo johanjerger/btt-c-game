@@ -24,7 +24,7 @@
 #include "include/types.h"
 
 
-	int generate_enemies(block * area, enemies * enem, int * cnt_enem, int * num, int * enem_level, int * e_l, int * time, int * level, int enemy_num)
+	int generate_enemies(block * area, enemies * enem, int * cnt_enem, int * num, int * enem_level, int * e_l, int * time, int * level, int enemy_num, int * time_sleep)
   	{
 		int side;
 		int succ = 0;
@@ -53,6 +53,7 @@
 						(*enem_level)--;
 						if((*enem_level) == 0){
 							*time -= 15;
+							*time_sleep = 1000;
 							(*level)++;
 							*enem_level = (*e_l) * (*level);
 						}

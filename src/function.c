@@ -134,7 +134,7 @@
 
 		if((system("clear")) == -1) exit(ERR_SYS);
 		
-		printf("Main Menu :\n\n\t1 ~> Easy\n\t2 ~> Normal\n\t3 ~> Hard\n\t4 ~> Very Hard\n\tt ~> Tutorial\n\th ~> History\n\ts ~> Score Tab\n\tq ~> exit\n\n\t\t\t\t\t\tversion: 0.1\n\n");
+		printf("Main Menu :\n\n\t1 ~> Easy\n\t2 ~> Normal\n\t3 ~> Hard\n\t4 ~> Very Hard\n\tt ~> Tutorial\n\th ~> History\n\ts ~> Score Tab\n\tq ~> exit\n\n\t\t\t\t\t\tversion: 0.2\n\n");
 		dif = getch();
 		switch(dif){
 		case '1': 

@@ -3,7 +3,7 @@
 
 
 	#define A 80		//area len
-	#define L 10			//area higth
+	#define L 10		//area higth
 	#define C 10		//shot cant
 	#define MT 20		//mounster time
 	#define MC 15		//mounster cant

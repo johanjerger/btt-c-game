@@ -3,10 +3,6 @@
 
 	int cheat_one(block *, int *, int *, int, char);
 
-	int cheat_two(block *, int *, int *, int, char);
-
-	int cheat_three(block *, int *, int *, int, char);
-
-  	int cheat_four(block *, fireball *, int, int);
+  	int cheat_two(block *, fireball *, int, int);
 
 #endif

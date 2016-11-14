@@ -1,14 +1,15 @@
 #ifndef BBT_TYPES_H
 #define BBT_TYPES_H
 
+	#define A 80		// Area length.
+	#define L 10		// Area higth.
+	#define C 10		// Shot max quantity per array "level".
+	#define MT 20		// Mounster time appearance.
+	#define MC 15		// Mounster quantity per array "level".
+	#define TB 10		// Size of score table.
+	#define CH 6		// Cheats string length.
 
-	#define A 80		//area len
-	#define L 10		//area higth
-	#define C 10		//shot cant
-	#define MT 20		//mounster time
-	#define MC 15		//mounster cant
-	#define TB 10		//size off score table
-	#define CH 6		//cheats len
+	// Defining some MACROSS for the printf caracters colour.
 
 	#define RED     "\x1b[31m"
 	#define GREEN   "\x1b[32m"
@@ -18,32 +19,93 @@
 	#define CYAN    "\x1b[36m"
 	#define RESET   "\x1b[0m"
 
-	typedef struct
+	/* 
+		Defining the struct of every single position	
+	   	in the matrix.
+	*/
+
+	typedef struct 		
 	{
 		char c;
-		int pos;
+		short pos;
 	} block;
 
-	typedef block block_arr[L][A+1];
+	typedef block block_arr[L][A+1]; // The matrix Area. 
 
+	// Defining the enemy and bullet's struct.
+	   
 	typedef struct
 	{
-		int pos;
-		int der;
+		short pos;
+		short der;
 	} bullet, enemies;
 
-	typedef struct
-	{
-		char name[256];
-		int point;
-	} score;
+	// Score tab slots struct.
 
 	typedef struct
 	{
-		int mod;
-		int pos;
-		int is_imp;
-		int der;
+		char name[16];
+		int point;
+		short level;
+		char difficulty[16];
+	} score;
+
+	/* 
+		Fireball char struct, the mod is for
+	   	control & know the actual state of
+	   	the fireball in the area, & is_imp
+	   	for know if this implote or not.
+	*/
+
+	typedef struct
+	{
+		short mod;
+		short pos;
+		short is_imp;
+		short der;
 	} fireball;
+
+	/* 
+		This five "enums" are uses in
+		menu.c for control who is the
+		current option
+	*/
+
+	enum 
+	{
+		START_GAME,
+		SCORE_TAB,
+		HISTORY,
+		TUTORIAL,
+		EXIT
+	};
+
+	enum 
+	{
+		EASY,
+		NORMAL,
+		HARD,
+		VERY_HARD,
+		HOPELESS
+	};
+
+	enum
+	{
+		FIRST,
+		SECOND,
+		THIRD
+	};
+
+	enum 
+	{
+		MENU,
+		CLEAN
+	};
+
+	enum
+	{
+		RESUME,
+		QUIT
+	};
 
 #endif

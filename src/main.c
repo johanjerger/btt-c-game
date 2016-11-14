@@ -22,59 +22,67 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
-#include <time.h>
 #include "include/types.h"
 #include "include/error.h"
 #include "include/function.h"
 #include "include/btt.h"
+#include "include/menu.h"
+#include "include/score_table.h"
 
 
 	int main()
 	{
-		int result = 0;
-		int dif;
-		int i;
-		char pj;
-
-		struct timespec ts;
-	  	ts.tv_sec = 3000 / 1000;
-	  	ts.tv_nsec = (3000 % 1000) * 1000000;
-
+		int i, game_difficulty_level, end_level, result;
+		int actual_option = START_GAME, actual_player = FIRST;
+		char player_char;
 		block_arr area;
+
+	  	/* 
+	  		We initialice every single level
+	  		of the matrix area.
+	  	*/
+
 		for(i=0; i < L; i++){
-			initialize_area(area[i]);
+			initialize_area(area[i]);			
 		}
 
+		// Can We call this the "Menu Loop"?
+
 		do{
-			dif = menu();
+			game_difficulty_level = menu(actual_option);
 
-			if(dif != 'q'){
-				pj = select_pj();
-				result = game(area, &dif, pj);
+			if(game_difficulty_level != 'q'){
+				end_level = 1; 
+				result = 0;
 				
-				if((system("clear")) == -1) exit(ERR_SYS);
-
-				printf("\t\t\tGAME OVER\n\tScore : %d\n\n", result);
+				player_char = select_player(actual_player);
+				result = game(area, &game_difficulty_level, &end_level, player_char);
 				
-				if((nanosleep(&ts, NULL)) == -1){
-					fprintf(stderr, "error -> %d\n", errno);
-					exit(ERR_SYS);
+				clear();
+				if(result > 15000){
+					printf(RED "\t\t\tGAME OVER!\n" RESET "\t\t\tScore: %d  :D\n\n", result);
+				} else if (result > 10000){
+					printf(RED "\t\t\tGAME OVER!\n" RESET "\t\t\tScore: %d  :)\n\n", result);
+				} else if(result > 5000){
+					printf(RED "\t\t\tGAME OVER!\n" RESET "\t\t\tScore: %d  :|\n\n", result);
+				} else {
+					printf(RED "\t\t\tGAME OVER!\n" RESET "\t\t\tScore: %d  :(\n\n", result);
 				}
 				
-				is_high_score(result);
+				_nanosleep(2000);
 				
-				if((nanosleep(&ts, NULL)) == -1){
-					fprintf(stderr, "error -> %d\n", errno);
-					exit(ERR_SYS);
-				}
-
+				is_high_score(result, end_level, game_difficulty_level);
+				
+				// We clean the area for another game.
 
 				for(i=0; i < L; i++){
 					initialize_area(area[i]);
 				}
 			}
 
-		} while((dif != 'q'));
+		} while((game_difficulty_level != 'q'));
+
+		clear();
 
 		return 0;
 	}

@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <termios.h>
 #include <unistd.h>
+#include <time.h>
 #include <fcntl.h>
 #include <string.h>
 #include <errno.h>
@@ -30,67 +31,42 @@
 #include "include/types.h"
 
 
-	static int score_tab()
+	short clear()
 	{
-		FILE * score_tb;
-		score imp_table[TB];
-		score sc;
-		int i, c;
-
-
-		if((system("clear")) == -1) exit(ERR_SYS);
-		if((score_tb = fopen("scoreTab", "r+")) == NULL){
-			score_tb = fopen("scoreTab", "w+");
-			for(i = 0; i < TB; i++){
-				strcpy(sc.name, " ----- ");
-				sc.point = 0;
-				fwrite(&sc.name, sizeof(sc.name), 1, score_tb);
-				fwrite(&sc.point, sizeof(sc.point), 1, score_tb);
-			}
-			rewind(score_tb);
-		}
-
-		for(i = 0; i < TB; i++){
-			if((fread(&sc.name, 1, sizeof(sc.name), score_tb)) == 0){
-				fprintf(stderr, "error -> %d\n", EIO);
-				exit(ERR_READ_FILE);
-			}
-	        if((fread(&sc.point, 1, sizeof(sc.point), score_tb)) == 0){
-	        	fprintf(stderr, "error -> %d\n", EIO);
-	        	exit(ERR_READ_FILE);
-	        }
-	        imp_table[i] = sc;
-		}
-		
-		printf("               SCORE TAB\n\n");
-		for(i = 0; i < TB; i++){
-			printf("%-15s ------ %15d\n", imp_table[i].name, imp_table[i].point);
-		}
-
-		fclose(score_tb);
-
-		printf("\n\n\t'c' ~> Clean score tab");
-		printf("\n\tENTER ~> menu\n");
-		if((c = getchar()) == 'c'){
-			getchar();
-			score_tb = fopen("scoreTab", "w+");
-			for(i = 0; i < TB; i++){
-				strcpy(sc.name, " ----- ");
-				sc.point = 0;
-				fwrite(&sc.name, sizeof(sc.name), 1, score_tb);
-				fwrite(&sc.point, sizeof(sc.point), 1, score_tb);
-			}
-			fclose(score_tb);
+		if((system("clear")) == -1){
+			fprintf(stderr, "error -> %d\n", errno); 
+			exit(ERR_SYS);
 		}
 
 		return 0;
 	}
 
 
-	int getch(void)
+	short _nanosleep(int time)
+	{
+		/* 
+			timespec struct is use for
+			every "sleep" time during
+			the game.
+		*/
+
+		struct timespec ts;
+	  	ts.tv_sec = time / 1000;
+	  	ts.tv_nsec = (time % 1000) * 1000000;
+
+		if((nanosleep(&ts, NULL)) == -1){ 
+			fprintf(stderr, "error -> %d\n", errno); 
+			exit(ERR_SYS);
+		}
+
+		return 0;
+	}
+
+
+	short getch(void)
 	{
 		struct termios oldattr, newattr;
-		int ch;
+		short ch;
 		tcgetattr(1, &oldattr);
 		newattr = oldattr;
 		newattr.c_lflag &= ~(ICANON | ECHO);
@@ -101,11 +77,11 @@
 	}
 
 
-	int kbhit(void)
+	short kbhit(void)
 	{
 		struct termios oldt, newt;
 		char ch[20];
-		int oldf;
+		short oldf;
 
 		tcgetattr(STDIN_FILENO, &oldt);
 		newt = oldt;
@@ -114,7 +90,7 @@
 		oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
 		fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
 
-		if((scanf("%s", ch)) == 0){
+		if(!(scanf("%s", ch))){
 			fprintf(stderr, "error -> %d\n", EIO);
 			exit(ERR_READ_SCAN);
 		}
@@ -122,94 +98,17 @@
 		tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 		fcntl(STDIN_FILENO, F_SETFL, oldf);
 
-		if(ch[0] != EOF) return ch[0];
+		if(ch[0] != EOF){
+			return ch[0];
+		}
 
 		return 0;
 	}
 
 
-	int menu()
+	short initialize_area(block * area)
 	{
-		int dif;
-
-		if((system("clear")) == -1) exit(ERR_SYS);
-		
-		printf("Main Menu :\n\n\t1 ~> Easy\n\t2 ~> Normal\n\t3 ~> Hard\n\t4 ~> Very Hard\n\tt ~> Tutorial\n\th ~> History\n\ts ~> Score Tab\n\tq ~> exit\n\n\t\t\t\t\t\tversion: 0.2\n\n");
-		dif = getch();
-		switch(dif){
-		case '1': 
-			printf("\nEasy mode Selected\nLoading,...\n");
-			break;
-		case '2': 
-			printf("\nNormal mode Selected\nLoading,...\n");
-			break;
-		case '3': 
-			printf("\nHard mode Selected\nLoading,...\n");
-			break;
-		case '4': 
-			printf("\nVery Hard mode Selected\nLoading,...\n");
-			break;
-		case 't': 
-			if((system("clear")) == -1) exit(ERR_SYS);
-			printf("\t TUTORIAL\n\n\t'a' ~> Left\n\t'd' ~> Right\n\t'w' ~> Up\n\t's' ~> Down\n\t'k' ~> shots\n\t'q' ~> quit\n\n\n\tPress ENTER\n");
-			getchar();
-			if((system("clear")) == -1) exit(ERR_SYS);
-			dif = menu();
-			break;
-		case 'h': 
-			if((system("clear")) == -1)	exit(ERR_SYS);
-			
-			printf("\n\tIn the year 2057, an UFO descended\n\ton planet earth, infecting the entire\n\tplanet with cannibal orphans with cold\n\tand mean feelings as a dead elephant.\n\n\tYou are the choosen one to defend\n\tthe planet from evil cannibal orphans.\n\n\tGrab your weaponds and go for them!\n\n\n\tPress ENTER\n");
-			getchar();
-			if((system("clear")) == -1) exit(ERR_SYS);
-	
-			dif = menu();
-			break;
-		case 's':
-			score_tab();
-			dif = menu();
-			break;
-		case 'q':
-			break;
-		default: 
-			printf("\nIncorrect Option, Easy mode Selected\nLoading,...\n");
-			dif = '1';
-			break;
-		}
-		if(dif != 'q'){
-			sleep(2.5);
-		}
-		if((system("clear")) == -1) exit(ERR_SYS);
-
-
-		return dif;
-	}
-
-
-	char select_pj()
-  	{
-		int c;
-		if((system("clear")) == -1)	exit(ERR_SYS);
-
-		printf("Select your Character:\n");
-		printf("\n\t1 ~> *\n\t2 ~> %c\n\t3 ~> +\n\n", 126);
-		c = getch();
-		switch(c){
-			case '1':
-				return '*';
-			case '2':
-				return 126;
-			case '3':
-				return '+';
-			default:
-				return '*';
-		}
-	}
-
-
-	int initialize_area(block * area)
-	{
-		int i;
+		short i;
 		area[0].c = '|';
 		area[0].pos = 0;
 		for(i = 1; i < A - 1; i++){
@@ -224,109 +123,33 @@
 	}
 
 
-	int draw(block_arr area)
+	short draw(block_arr area, int player_char)
 	{
-		int i, j;
-
-		if((system("clear")) == -1) exit(ERR_SYS);
-
+		short i, j;
+		clear();
 		for(i = 0; i < L; i++){
 			j = 0;
-			printf(MAGENTA "%c" RESET, '|');
+			printf(MAGENTA "|" RESET);
 			for(j = 1; j < A-1; j++){
 				if(area[i][j].c == '#'){
-					printf(GREEN "%c" RESET, area[i][j].c);
-				} else if((area[i][j].c == '*') || (area[i][j].c == 126) || (area[i][j].c == '+')){
+					printf(GREEN "#" RESET);
+				} else if(area[i][j].c == player_char){
 					printf(CYAN "%c" RESET, area[i][j].c);
 				} else if(area[i][j].c == 'x'){
-					printf(RED "%c" RESET, area[i][j].c);
+					printf(RED "X" RESET);
 				} else if(area[i][j].c == '-'){
-					printf(BLUE "%c" RESET, area[i][j].c);
+					printf(BLUE "-" RESET);
+				} else if(area[i][j].c != ' '){
+					printf(CYAN "%c" RESET, area[i][j].c);
 				} else {
-					printf(MAGENTA "%c" RESET, area[i][j].c);
+					printf("%c", area[i][j].c);
 				}
 			}
-			printf("%c\n", '|');
+			printf(MAGENTA "|\n" RESET);
 		}
-
-		return 0;
-	}
-
-
-	int is_high_score(int point)
-	{
-		FILE * score_tb;
-		score imp_table[TB];
-		score sc;
-		char aux[256], aux_name[256];
-		int i, j, c, pos = TB, aux_score;
-
-		printf("\n\t\t\tPRESS ENTER\n");
-		while((getchar())!='\n');
-
-		if((score_tb = fopen("scoreTab", "r+")) == NULL){
-			score_tb = fopen("scoreTab", "w+");
-			for(i = 0; i < TB; i++){
-				strcpy(sc.name, " ----- ");
-				sc.point = 0;
-				fwrite(&sc.name, sizeof(sc.name), 1, score_tb);
-				fwrite(&sc.point, sizeof(sc.point), 1, score_tb);
-			}
-			rewind(score_tb);
+		for(j = 0; j < A; j++){
+			printf(CYAN "‾" RESET);
 		}
-
-		for(i = 0; i < TB; i++){
-			if((fread(&sc.name, 1, sizeof(sc.name), score_tb)) == 0){
-				fprintf(stderr, "error -> %d\n", EIO);
-				exit(ERR_READ_FILE);
-			}
-	        if((fread(&sc.point, 1, sizeof(sc.point), score_tb)) == 0){
-	        	fprintf(stderr, "error -> %d\n", EIO);
-	        	exit(ERR_READ_FILE);
-	        }
-	        imp_table[i] = sc;
-		}
-
-		aux[0] = ' ';
-
-		for(i = 0, j = 1; i < TB; i++){
-			if(point >= imp_table[i].point){
-				pos = i;
-				printf("Congrats your score is the number %d of the list\n", i+1);
-				printf("Put your name [10 char] : \n");
-				while(((c = getchar()) != 10) && (j < 10)){
-					aux[j++] = c;
-				}
-
-				break;
-			}
-		}
-
-		for(; pos < TB; pos++){
-			strcpy(aux_name, imp_table[pos].name);
-			aux_score = imp_table[pos].point;
-			strcpy(imp_table[pos].name, aux);
-			imp_table[pos].point = point;
-			strcpy(aux, aux_name);
-			point = aux_score;
-		}
-
-		rewind(score_tb);
-		for(i = 0; i < TB; i++){
-			fwrite(&imp_table[i].name, sizeof(imp_table[i].name), 1, score_tb);
-			fwrite(&imp_table[i].point, sizeof(imp_table[i].point), 1, score_tb);
-		}
-
-		fclose(score_tb);
-
-		if((system("clear")) == -1) exit(ERR_SYS);
-
-		printf("               SCORE TAB\n\n");
-		for(i = 0; i < TB; i++){
-			printf("%-15s ------ %15d\n", imp_table[i].name, imp_table[i].point);
-		}
-
-		printf("\n");
 
 		return 0;
 	}

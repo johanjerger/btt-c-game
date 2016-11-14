@@ -24,34 +24,36 @@
 #include "include/types.h"
 
 
-	int generate_enemies(block * area, enemies * enem, int * cnt_enem, int * num, int * enem_level, int * e_l, int * time, int * level, int enemy_num, int * time_sleep)
+	int generate_enemies(block * area, enemies * enem, int * cnt_enem, 
+						 int * num, int * enem_level, int * e_l, int * time, 
+						 int * level, int enemy_num, int * time_sleep)
   	{
 		int side;
-		int succ = 0;
+		int success = 0;
 
-		if(*num == 0){
+		if(!*num){
 				//num = rand() % (n - m + 1) + m   ---  [M, N]
 				*num = rand() % (MT - enemy_num) + 1;
 				if(*cnt_enem < MC){
 					side = rand() % (21) - 10;
 					if(side >= 0){
-							enem[*cnt_enem].pos = 1;
-							enem[*cnt_enem].der = 1;
+						enem[*cnt_enem].pos = 1;
+						enem[*cnt_enem].der = 1;
 						if((area[enem[*cnt_enem].pos+1].c) != '#'){
-							succ = 1;
+							success = 1;
 							area[enem[*cnt_enem].pos].c = '#';
 						}
 					} else {
 						enem[*cnt_enem].pos = A - 2;
 						enem[*cnt_enem].der = 0;
 						if((area[enem[*cnt_enem].pos-1].c) != '#'){
-							succ = 1;
+							success = 1;
 							area[enem[*cnt_enem].pos].c = '#';
 						}
 					}
-					if(succ){
+					if(success){
 						(*enem_level)--;
-						if((*enem_level) == 0){
+						if(!*enem_level){
 							*time -= 15;
 							*time_sleep = 1000;
 							(*level)++;
@@ -68,7 +70,8 @@
 	}
 
 
-	int generate_shots(block * area, int * c_shots, bullet * shots, int act_lv, int act, int handicap, int der)
+	int generate_shots(block * area, int * c_shots, bullet * shots, 
+					   int act_lv, int act, int handicap, int der)
 	{
 		if((area[act+2].c != '-') && (area[act-2].c != '-')){
 			if(*c_shots < handicap){

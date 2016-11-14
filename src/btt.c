@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <time.h>
+#include <ctype.h>
 #include "include/types.h"
 #include "include/function.h"
 #include "include/moves.h"
@@ -31,39 +32,43 @@
 #include "include/cheats.h"
 #include "include/generate.h"
 #include "include/error.h"
+#include "include/menu.h"
+#include "include/game_loop_function.h"
 
 
-	int game(block_arr area, int * dif, char pj)
+	int game(block_arr area, int * difficulty, int * level, char player_char)
 	{
-		int key, c, i;
-		int act = A/2, act_lv = 1;
-		int c_shots[L], c_enem[L];
-		int pnt = 0, num = 5, quit = 0, dif_n = 0, enem_n = 0, handicap = 0, der = 0;
-		int is_cheat = 0, cheat_t, is_fb = 0, time_sleep = 0;
-		int level = 1, enem_level = 100, e_l = 100, time = 125;
+		short pause_option = RESUME, quit = 0;
+		short key, i;
+		int actual_position = A/2, actual_row = 1;
+		int amount_of_shots[L], amount_of_enemies[L];
+		int total_score = 0, num = 5, dif_n = 0, enem_n = 0;
+		int handicap = 0, direction = 0;
+		int is_cheat = 0, cheat_type, is_fb = 0, time_sleep = 0;
+		int enem_level = 100, e_l = 100, time = 125;
 		char cheat[CH];
 		fireball ball;
-		struct timespec ts;
-	  	ts.tv_sec = time / 1000;
-	  	ts.tv_nsec = (time % 1000) * 1000000;
 
 		for(i = 0; i < CH - 1; i++) cheat[i] = ' ';
 		cheat[CH-1]= '\0';
 
-		for(i = 0; i < L; i++) c_shots[i] = 0, c_enem[i] = 0;
+		for(i = 0; i < L; i++) amount_of_shots[i] = 0, amount_of_enemies[i] = 0;
 
-		switch(*dif){
-		case '1': 
-			dif_n = 0; enem_n = 0;
+		switch(*difficulty){
+		case EASY: 
+			dif_n = 0; enem_n = 1;
 			break;
-		case '2': 
+		case NORMAL: 
 			dif_n = 2; enem_n = 5;
 			break;
-		case '3': 
+		case HARD: 
 			dif_n = 4; enem_n = 10;
 			break;
-		case '4': 
+		case VERY_HARD: 
 			dif_n = 6; enem_n = 15;
+			break;
+		case HOPELESS:
+			dif_n = 10; enem_n = 8;
 			break;
 		}
 
@@ -74,161 +79,79 @@
 		block null_area;
 		null_area.pos = -1;
 
-		area[act_lv][act].c = pj;
+		area[actual_row][actual_position].c = player_char;
 
-		draw(area);
-		printf(FOOTBAR);
+		draw(area, player_char);
+		printf_footbar(handicap, amount_of_shots, actual_row, total_score, level);
 		printf("press 't' for the tutorial or 'q' for exit\n");
 
 		do{
 			if((key = kbhit())){
+				key = tolower(key);
 				switch(key){
 				case 'd':
-					is_cheat = verify_cheat(cheat, &cheat_t, key);
-					if(area[act_lv][act].pos != A - 2){
-						area[act_lv][act].c = ' ';
-						act++;
-						area[act_lv][act].c = pj;
-						der = 1;
-					}
+					is_cheat = verify_cheat(cheat, &cheat_type, key);
+					horizontal_move(A-2, 1, 1, area, actual_row, &actual_position, player_char, &direction);
 					break;
 				case 'a':
-					is_cheat = verify_cheat(cheat, &cheat_t, key);
-					if(area[act_lv][act].pos != 1){
-						area[act_lv][act].c = ' ';
-						act--;
-						area[act_lv][act].c = pj;
-						der = 0;
-					}
+					is_cheat = verify_cheat(cheat, &cheat_type, key);
+					horizontal_move(1, -1, 0, area, actual_row, &actual_position, player_char, &direction);
 					break;
 				case 'w':
-					is_cheat = verify_cheat(cheat, &cheat_t, key);
-					if(act_lv == 1){
-						jump(area, &act, der, pj, 0);
+					is_cheat = verify_cheat(cheat, &cheat_type, key);
+					if(actual_row == 1){
+						jump(area, &actual_position, direction, player_char, 0);
 
 						for(i = 1; i < L; i++){
-							if(is_fb == i){
-								move_fireball(area[i], &ball, &is_fb);
-							}
-							move_shots(area[i], shots[i], &(c_shots[i]));
-							move_enem(area[i], enem[i], &(c_enem[i]));
-							if(time_sleep == 0){
-								generate_enemies(area[i], enem[i], &(c_enem[i]), &num, &enem_level, &e_l, &time, &level ,enem_n, &time_sleep);
-							} else {
-								time_sleep--;
-								if(time_sleep == 500){
-									area[L/2][(A/2)-3].c = 'L';
-									area[L/2][(A/2)-2].c = 'E';
-									area[L/2][(A/2)-1].c = 'V';
-									area[L/2][(A/2)].c = 'E';
-									area[L/2][(A/2)+1].c = 'L';
-									area[L/2][(A/2)+2].c = ' ';
-									area[L/2][(A/2)+3].c = 'U';
-									area[L/2][(A/2)+4].c = 'P';
-								}
-							}
-							pnt += verify_shots(area[i], enem[i], shots[i], &(c_enem[i]), &(c_shots[i]), handicap);
-							if(is_fb == i){
-								if(i < L-1){
-									pnt += verify_fireball(area[i], area[i-1], area[i+1], enem[i], enem[i-1], enem[i+1], &ball, &(c_enem[i]), &(c_enem[i-1]), &(c_enem[i+1]), &is_fb);
-								} else if(i == (L-1)){
-									pnt += verify_fireball(area[i], area[i-1], &null_area, enem[i], enem[i-1], enem[i-1], &ball, &(c_enem[i]), &(c_enem[i-1]), &(c_enem[i-1]), &is_fb);
-								}
-							}
+							move_operations(area[i], shots[i], enem[i], &ball, &(amount_of_shots[i]), &(amount_of_enemies[i]), &is_fb, i);
+							generate_enemies_control(area[i], enem[i], &(amount_of_enemies[i]), &num, &enem_level, 
+													 &e_l, &time, level, enem_n, &time_sleep, area);
+							total_score += verify_shots(area[i], enem[i], shots[i], &(amount_of_enemies[i]), &(amount_of_shots[i]), handicap);
+							fireball_control(&is_fb, i, &total_score, area[i], area[i-1], area[i+1],
+										 	 enem[i], enem[i-1], enem[i+1], &ball, &(amount_of_enemies[i]), 
+										 	 &(amount_of_enemies[i-1]), &(amount_of_enemies[i+1]), &null_area);
 						}
-						draw(area);
-						printf(FOOTBAR);
-						if((nanosleep(&ts, NULL)) == -1){
-							fprintf(stderr, "error -> %d\n", errno);
-							exit(ERR_SYS);
-						}
+						draw(area, player_char);
+						printf_footbar(handicap, amount_of_shots, actual_row, total_score, level);
+						_nanosleep(time);
 
-						jump(area, &act, der, pj, 1);
+						jump(area, &actual_position, direction, player_char, 1);
 
 						for(i = 1; i < L; i++){
-							if(is_fb == i){
-								move_fireball(area[i], &ball, &is_fb);
-							}
-							move_shots(area[i], shots[i], &(c_shots[i]));
-							move_enem(area[i], enem[i], &(c_enem[i]));
-							if(time_sleep == 0){
-								generate_enemies(area[i], enem[i], &(c_enem[i]), &num, &enem_level, &e_l, &time, &level ,enem_n, &time_sleep);
-							} else {
-								time_sleep--;
-								if(time_sleep == 500){
-									area[L/2][(A/2)-3].c = 'L';
-									area[L/2][(A/2)-2].c = 'E';
-									area[L/2][(A/2)-1].c = 'V';
-									area[L/2][(A/2)].c = 'E';
-									area[L/2][(A/2)+1].c = 'L';
-									area[L/2][(A/2)+2].c = ' ';
-									area[L/2][(A/2)+3].c = 'U';
-									area[L/2][(A/2)+4].c = 'P';
-								}
-							}
-							pnt += verify_shots(area[i], enem[i], shots[i], &(c_enem[i]), &(c_shots[i]), handicap);
-							if(is_fb == i){
-								if(i < L-1){
-									pnt += verify_fireball(area[i], area[i-1], area[i+1], enem[i], enem[i-1], enem[i+1], &ball, &(c_enem[i]), &(c_enem[i-1]), &(c_enem[i+1]), &is_fb);
-								} else if(i == (L-1)){
-									pnt += verify_fireball(area[i], area[i-1], &null_area, enem[i], enem[i-1], enem[i-1], &ball, &(c_enem[i]), &(c_enem[i-1]), &(c_enem[i-1]), &is_fb);
-								}
-							}
+							move_operations(area[i], shots[i], enem[i], &ball, &(amount_of_shots[i]), &(amount_of_enemies[i]), &is_fb, i);
+							generate_enemies_control(area[i], enem[i], &(amount_of_enemies[i]), &num, &enem_level, 
+													 &e_l, &time, level, enem_n, &time_sleep, area);
+							total_score += verify_shots(area[i], enem[i], shots[i], &(amount_of_enemies[i]), &(amount_of_shots[i]), handicap);
+							fireball_control(&is_fb, i, &total_score, area[i], area[i-1], area[i+1],
+										 	 enem[i], enem[i-1], enem[i+1], &ball, &(amount_of_enemies[i]), 
+										 	 &(amount_of_enemies[i-1]), &(amount_of_enemies[i+1]), &null_area);
 						}
-						draw(area);
-						printf(FOOTBAR);
-						if((nanosleep(&ts, NULL)) == -1){
-							fprintf(stderr, "error -> %d\n", errno);
-							exit(ERR_SYS);
-						}
+						draw(area, player_char);
+						printf_footbar(handicap, amount_of_shots, actual_row, total_score, level);
+						_nanosleep(time);
 
-						jump(area, &act, der, pj, 2);
+						jump(area, &actual_position, direction, player_char, 2);
 					} else {
-						area[act_lv][act].c = ' ';
-						act_lv--;
-						area[act_lv][act].c = pj;
+						area[actual_row][actual_position].c = ' ';
+						actual_row--;
+						area[actual_row][actual_position].c = player_char;
 					}
 					break;
 				case 's':
-					is_cheat = verify_cheat(cheat, &cheat_t, key);
-					if(act_lv < L-1){
-						area[act_lv][act].c = ' ';
-						act_lv++;
-						area[act_lv][act].c = pj;
+					is_cheat = verify_cheat(cheat, &cheat_type, key);
+					if(actual_row < L-1){
+						area[actual_row][actual_position].c = ' ';
+						actual_row++;
+						area[actual_row][actual_position].c = player_char;
 					}
 					break;
 				case 'k':
-					is_cheat = verify_cheat(cheat, &cheat_t, key);
-					generate_shots(area[act_lv], &(c_shots[act_lv]), shots[act_lv], act_lv, act, handicap, der);
+					is_cheat = verify_cheat(cheat, &cheat_type, key);
+					generate_shots(area[actual_row], &(amount_of_shots[actual_row]), shots[actual_row], actual_row, actual_position, handicap, direction);
 					break;
 				case 'p':
-					if((system("clear")) == -1) exit(ERR_SYS);
-					
-					printf("\t\t\t\tPAUSE\n");
-					while(((c = getch())!='p') && (c != 'q'));
-					if(c == 'q'){
-						if((system("clear")) == -1){
-							exit(ERR_SYS);
-						}
-						printf("Are you sure?[Y/N]\n");
-						if(((c = getch()) == 'Y') || (c == 10) || (c == 'y')){
-							quit = 1;
-							*dif = 'a';
-						}
-					}
+					pause_messege(pause_option, &quit);
 					break;
-				case 'q':
-					if((system("clear")) == -1) exit(ERR_SYS);
-					
-					printf("Are you sure?[Y/N]\n");
-					if(((c = getch()) == 'Y') || (c == 10) || (c == 'y')){
-						quit = 1;
-						*dif = 'a';
-					}
-					break;
-				case 't':
-					printf("\n\t'a' -> Left\n\t'd' -> Right\n\t'w' -> Up\n\t's' -> Down\n\t'k' -> shots\n\t'p' -> pause\n\t'q' -> quit\n");
-					sleep(3);
 				}
 			}
 
@@ -236,79 +159,44 @@
 
 				if(!is_cheat){
 					for(i = 1; i < L; i++){
-						if(is_fb == i){
-							move_fireball(area[i], &ball, &is_fb);
-						}
-						move_shots(area[i], shots[i], &(c_shots[i]));
-						move_enem(area[i], enem[i], &(c_enem[i]));
+						move_operations(area[i], shots[i], enem[i], &ball, &(amount_of_shots[i]), &(amount_of_enemies[i]), &is_fb, i);
 						
-						if(time_sleep == 0){
-							generate_enemies(area[i], enem[i], &(c_enem[i]), &num, &enem_level, &e_l, &time, &level ,enem_n, &time_sleep);
-						} else {
-							time_sleep--;
-							if(time_sleep == 500){
-								area[L/2][(A/2)-3].c = 'L';
-								area[L/2][(A/2)-2].c = 'E';
-								area[L/2][(A/2)-1].c = 'V';
-								area[L/2][(A/2)].c = 'E';
-								area[L/2][(A/2)+1].c = 'L';
-								area[L/2][(A/2)+2].c = ' ';
-								area[L/2][(A/2)+3].c = 'U';
-								area[L/2][(A/2)+4].c = 'P';
-							}
-						}
+						generate_enemies_control(area[i], enem[i], &(amount_of_enemies[i]), &num, &enem_level, 
+												 &e_l, &time, level, enem_n, &time_sleep, area);
 
-						pnt += verify_shots(area[i], enem[i], shots[i], &(c_enem[i]), &(c_shots[i]), handicap);
-						if(is_fb == i){
-							if(i < L-1){
-								pnt += verify_fireball(area[i], area[i-1], area[i+1], enem[i], enem[i-1], enem[i+1], &ball, &(c_enem[i]), &(c_enem[i-1]), &(c_enem[i+1]), &is_fb);
-							} else if(i == (L-1)){
-								pnt += verify_fireball(area[i], area[i-1], &null_area, enem[i], enem[i-1], enem[i-1], &ball, &(c_enem[i]), &(c_enem[i-1]), &(c_enem[i-1]), &is_fb);
-							}
-						}
-						if(act_lv == i){
-							quit = verify_pj(enem[i], area[i], act, c_enem[i]);
-							if(quit){
-								*dif = 'a';
-							}
+						total_score += verify_shots(area[i], enem[i], shots[i], &(amount_of_enemies[i]), &(amount_of_shots[i]), handicap);
+						fireball_control(&is_fb, i, &total_score, area[i], area[i-1], area[i+1],
+										 enem[i], enem[i-1], enem[i+1], &ball, &(amount_of_enemies[i]), 
+										 &(amount_of_enemies[i-1]), &(amount_of_enemies[i+1]), &null_area);
+
+						if(actual_row == i){
+							quit = verify_player(enem[i], area[i], actual_position, amount_of_enemies[i]);
 						}
 					}
 				} else {
-					switch(cheat_t){
+					switch(cheat_type){
 					case 1: 
-						cheat_one(area[act_lv], &(c_enem[act_lv]), &(c_shots[act_lv]), act, pj);
+						cheat_one(area[actual_row], &(amount_of_enemies[actual_row]), &(amount_of_shots[actual_row]), actual_position, player_char);
 						break;
 					case 2:
-						cheat_two(area[act_lv], &(c_enem[act_lv]), &(c_shots[act_lv]), act, pj);
-						break;
-					case 3:
-						cheat_three(area[act_lv], &(c_enem[act_lv]), &(c_shots[act_lv]), act, pj);
-						break;
-					case 4:
 						if(!is_fb){
-							cheat_four(area[act_lv], &ball, act, der);
+							cheat_two(area[actual_row], &ball, actual_position, direction);
+							is_fb = actual_row;
 						}
-						is_fb = act_lv;
 						break;
 					}
 					is_cheat = 0;
 				}
-
-				ts.tv_sec = time / 1000;
-	  			ts.tv_nsec = (time % 1000) * 1000000;
 				
-				draw(area);
-				printf(FOOTBAR);
-				if((nanosleep(&ts, NULL)) == -1){
-					fprintf(stderr, "error -> %d\n", errno);
-					exit(ERR_SYS);
-				}
+				draw(area, player_char);
+				printf_footbar(handicap, amount_of_shots, actual_row, total_score, level);
+				_nanosleep(time);
 			} else {
 				time_sleep--;
 			}
 
 		} while(!quit);
 
-		return pnt;
+		return total_score;
 	}
 	

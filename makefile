@@ -3,7 +3,7 @@ BUILD_FOLDER=build
 TEMPORAL_FOLDER=tmp
 INSTALL_FOLDER=/usr/bin
 
-CFLAG=-O3 -Wall -std=c11
+CFLAG=-O3 -Wall -std=gnu11
 DEBUG=-g
 
 
@@ -19,6 +19,9 @@ main.o:
 		gcc -c $(SOURCE_FOLDER)/moves.c -o $(TEMPORAL_FOLDER)/moves.o $(CFLAG) $(DEBUG)
 		gcc -c $(SOURCE_FOLDER)/cheats.c -o $(TEMPORAL_FOLDER)/cheats.o $(CFLAG) $(DEBUG)
 		gcc -c $(SOURCE_FOLDER)/generate.c -o $(TEMPORAL_FOLDER)/generate.o $(CFLAG) $(DEBUG)
+		gcc -c $(SOURCE_FOLDER)/menu.c -o $(TEMPORAL_FOLDER)/menu.o $(CFLAG) $(DEBUG)
+		gcc -c $(SOURCE_FOLDER)/score_table.c -o $(TEMPORAL_FOLDER)/score_table.o $(CFLAG) $(DEBUG)
+		gcc -c $(SOURCE_FOLDER)/game_loop_function.c -o $(TEMPORAL_FOLDER)/game_loop_function.o $(CFLAG) $(DEBUG)
 
 clean: 
 		rm -r $(TEMPORAL_FOLDER) $(BUILD_FOLDER)

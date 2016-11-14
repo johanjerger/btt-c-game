@@ -7,4 +7,8 @@
 
 #define ERR_READ_SCAN 3
 
+#define ERR_CREATING_FILE 4
+
+#define ERR_OPEN_FILE 5
+
 #endif

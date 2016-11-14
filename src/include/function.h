@@ -1,24 +1,16 @@
 #ifndef BTT_FUNC_H
 #define BTT_FUNC_H
 
-#define FOOTBAR "\nRemaining shots : %d\t\tPoints : %d\n\t   Level : %d\n", handicap - c_shots[act_lv], pnt, level
+	short clear();
 
-	int getch();
+	short _nanosleep(int);
 
-	int kbhit();
+	short getch();
 
-	int menu();
+	short kbhit();
 
-	char select_pj();
+	short initialize_area(block *);
 
-	int initialize_area(block *);
-
-	int is_high_score(int);
-
-	int draw(block_arr);
-
-	int move_shots(block *, bullet *, int *);
-
-	int move_enem(block *, enemies *, int *);
+	short draw(block_arr, int);
 
 #endif

@@ -38,71 +38,7 @@
 	}
 
 
-	int cheat_two(block * area, int * cnt_enem, int * cnt_shots, int act, char pj)
-  	{
-		int i;
-
-		*cnt_enem = 0;
-		*cnt_shots = 0;
-
-		for(i = 1; i < A - 1; i++){
-			area[i].c = ' ';
-		}
-		area[(A/2)-7].c = 'U';
-		area[(A/2)-6].c = 'L';
-		area[(A/2)-5].c = 'I';
-		area[(A/2)-4].c = 'S';
-		area[(A/2)-3].c = 'E';
-		area[(A/2)-2].c = 'S';
-		area[(A/2)-1].c = ' ';
-		area[(A/2)].c = 'D';
-		area[(A/2)+1].c = 'E';
-		area[(A/2)+2].c = ' ';
-		area[(A/2)+3].c = 'M';
-		area[(A/2)+4].c = 'I';
-		area[(A/2)+5].c = 'E';
-		area[(A/2)+6].c = 'R';
-		area[(A/2)+7].c = 'D';
-		area[(A/2)+8].c = 'A';
-
-		area[act].c = pj;
-
-		return 0;
-	}
-
-
-	int cheat_three(block * area, int * cnt_enem, int * cnt_shots, int act, char pj)
-  	{
-		int i;
-
-		*cnt_enem = 0;
-		*cnt_shots = 0;
-
-		for(i = 1; i < A - 1; i++){
-			area[i].c = ' ';
-		}
-		area[(A/2)-6].c = 'L';
-		area[(A/2)-5].c = 'U';
-		area[(A/2)-4].c = 'C';
-		area[(A/2)-3].c = 'A';
-		area[(A/2)-2].c = 'S';
-		area[(A/2)-1].c = ' ';
-		area[(A/2)].c = 'D';
-		area[(A/2)+1].c = 'E';
-		area[(A/2)+2].c = ' ';
-		area[(A/2)+3].c = 'M';
-		area[(A/2)+4].c = 'I';
-		area[(A/2)+5].c = 'E';
-		area[(A/2)+6].c = 'R';
-		area[(A/2)+7].c = 'D';
-		area[(A/2)+8].c = 'A';
-		area[act].c = pj;
-
-		return 0;
-	}
-
-
-	int cheat_four(block * area, fireball * ball, int act, int der)
+	int cheat_two(block * area, fireball * ball, int act, int der)
   	{
 		ball->is_imp = 0;
 		ball->mod = 0;

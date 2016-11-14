@@ -24,11 +24,12 @@
 #include "include/types.h"
 
 	
-	static int cmp_fireball(block * area, enemies * enem, fireball * ball, int * cnt_enem)
+	static short cmp_fireball(block * area, enemies * enem, fireball * ball, 
+							int * cnt_enem)
 	{
-		int arr_en[MC];
-		int i, j, k = 0, len = 0;
-		int points = 0;
+		short arr_en[MC];
+		short i, j, k = 0, len = 0;
+		short points = 0;
 
 		for(i = 0; i < *cnt_enem; i++){
 			if(enem[i].pos == ball->pos || enem[i].pos == ball->pos+1 || enem[i].pos == ball->pos-1){
@@ -54,13 +55,14 @@
 	}
 
 
-	int verify_shots(block * area, enemies * enem, bullet * shots, int * cnt_enem, int * cnt_shots, int handicap)
+	short verify_shots(block * area, enemies * enem, bullet * shots, 
+					 int * cnt_enem, int * cnt_shots, int handicap)
   	{
-		int points = 0;
-		int i, j, k = 0;
-		int arr_en[MC];
-		int arr_sh[handicap];
-		int len = 0;
+		short points = 0;
+		short i, j, k = 0;
+		short arr_en[MC];
+		short arr_sh[handicap];
+		short len = 0;
 
 		for(i = 0; i < *cnt_enem; i++){
 			for(j = 0; j < *cnt_shots; j++){
@@ -98,14 +100,20 @@
 	}
 
 
-	int verify_pj(enemies * enem, block * area, int act, int cnt_enem)
+	short verify_player(enemies * enem, block * area, int act, int cnt_enem)
   	{
-		int kill = 0;
-		int j;
+		short kill = 0;
+		short j;
 
 		for(j = 0; j < cnt_enem; j++){
-			if((enem[j].pos == area[act].pos) || (enem[j].pos == area[act-1].pos) || (enem[j].pos == area[act+1].pos)){
-				kill = 1;
+			if(enem[j].der){
+				if((enem[j].pos == area[act].pos) || (enem[j].pos == area[act+1].pos)){
+					kill = 1;
+				}
+			} else {
+				if((enem[j].pos == area[act].pos) || (enem[j].pos == area[act-1].pos)){
+					kill = 1;
+				}
 			}
 		}
 
@@ -113,44 +121,20 @@
 	}
 
 
-	int verify_cheat(char * cheat, int * type, char key)
+	short verify_cheat(char * cheat, int * type, char key)
   	{
-		int i;
+		short i;
 		cheat[CH-1] = key;
 		for(i = 0; i < 	CH - 1; i++){
 			cheat[i] = cheat[i+1];
 		}
 		cheat[CH-1] = '\0';
 		if(!strcmp(cheat, "adkda")){
-			for(i = 0; i < CH -1; i++){
-				cheat[i] = ' ';
-			}
-
 			*type = 1;
 			return 1;
 		}
-		if(!strcmp(cheat, "aawsk")){
-			for(i = 0; i < CH -1; i++){
-				cheat[i] = ' ';
-			}
-
-			*type = 2;
-			return 1;
-		}
-		if(!strcmp(cheat, "ddswk")){
-			for(i = 0; i < CH -1; i++){
-				cheat[i] = ' ';
-			}
-
-			*type = 3;
-			return 1;
-		}
 		if((!strcmp(cheat, "akdda")) || (!strcmp(cheat, "dkaad"))){
-			for(i = 0; i < CH -1; i++){
-				cheat[i] = ' ';
-			}
-
-			*type = 4;
+			*type = 2;
 			return 1;
 		}
 
@@ -158,11 +142,14 @@
 	}
 
 
-	int verify_fireball(block * area_act, block * area_top, block * area_lower, enemies * enem_act, enemies * enem_top, enemies * enem_lower, fireball * ball, int * cnt_enem_act, int * cnt_enem_top, int * cnt_enem_lower, int * is_fireball)
+	short verify_fireball(block * area_act, block * area_top, block * area_lower, 
+						enemies * enem_act, enemies * enem_top, enemies * enem_lower, 
+						fireball * ball, int * cnt_enem_act, int * cnt_enem_top, 
+						int * cnt_enem_lower, int * is_fireball)
   	{
-		int points = 0;
-		int i, j;
-		int aux = 0;
+		short points = 0;
+		short i, j;
+		short aux = 0;
 		if(ball->mod == 0){
 			for(i = 0; i < *cnt_enem_act; i++){
 				if((enem_act[i].pos == ball->pos) || (enem_act[i].pos == (ball->pos + 1)) || (enem_act[i].pos == (ball->pos - 1))){
@@ -177,7 +164,6 @@
 				}
 			}
 			if((ball->is_imp) && (aux < MC - 1)){
-
 				for(j = aux; j < *cnt_enem_act; j++){
 					enem_act[j].pos = enem_act[j+1].pos;
 					enem_act[j].der = enem_act[j+1].der;

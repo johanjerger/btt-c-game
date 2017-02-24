@@ -18,9 +18,8 @@
   
   1. Download compressed 
   
-  [![tar: 34kb](https://img.shields.io/badge/tar%20-34%20kb%20-red.svg)](https://github.com/johanjerger/btt-c-game/archive/v1.0.tar.gz)
-  
-  [![zip: 45kb](https://img.shields.io/badge/zip%20-45%20kb%20-red.svg)](https://github.com/johanjerger/btt-c-game/archive/v1.0.zip)
+  [![btt-c-game-1.0.tar.gz: 34kb](https://img.shields.io/badge/btt--c--game--1.0.tar.gz-34kb-blue.svg)](https://github.com/johanjerger/btt-c-game/archive/v1.0.tar.gz) 
+  [![btt-c-game-1.0.zip: 45kb](https://img.shields.io/badge/btt--c--game--1.0.zip-45kb-blue.svg)](https://github.com/johanjerger/btt-c-game/archive/v1.0.zip)
   
   2. Descompress with your favorite program.
   

@@ -25,7 +25,7 @@
   2. Descompress with your favorite program.
   
   ```
-    $ cd btt-c-game
+    $ cd btt-c-game-1.0
     $ make
     $ make install
   ```

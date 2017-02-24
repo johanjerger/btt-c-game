@@ -1,15 +1,34 @@
 # btt-c-game
+[![License: GPLv3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/license/gpl-3.0)
+[![Version: v1.0](https://img.shields.io/badge/Version-v1.0-blue.svg)](https://github.com/johanjerger/btt-c-game/releases/v1.0)
   
-  btt is a little c game, where you can see some basic concepts of this lenguage.
+  btt is a c game, where you can see some concepts of this lenguage and have fun in your favorite terminal.
   
 ## Installation
   
-  All yo need to do:
+#### With Git:
     
+  ```
     $ git clone https://github.com/johanjerger/btt-c-game.git
     $ make
     $ make install
+  ```
     
-  NOTE
-    
-    If you have some trouble with the Score tab at the end of the game, maybe you need to change the score_tb file directory in the function is_high_score in function.c file.
+#### Manually
+  
+  1. Download compressed in [tar](https://github.com/johanjerger/btt-c-game/archive/v1.0.tar.gz) or [zip](https://github.com/johanjerger/btt-c-game/archive/v1.0.zip).
+  
+  2. Descompress with your favorite program.
+  
+  ```
+    $ cd btt-c-game
+    $ make
+    $ make install
+  ```
+  You may need to give sudo permissions.
+  
+## Unistall
+  
+  ```
+    $ make uninstall
+  ```

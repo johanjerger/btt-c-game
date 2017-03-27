@@ -3,6 +3,6 @@
 
 	int generate_enemies(block *, enemies *, int *, int *, int *, int *, int *, int *, int, int *);
 
-	int generate_shots(block *, int *, bullet *, int, int, int, int);
+	int generate_shots(block *, int *, bullet *, int, int, int);
 
 #endif

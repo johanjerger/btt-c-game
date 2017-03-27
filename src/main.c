@@ -32,7 +32,8 @@
 
 	int main()
 	{
-		int i, game_difficulty_level, end_level, result;
+		int result;
+		int i, game_difficulty_level, end_level;
 		int actual_option = START_GAME, actual_player = FIRST;
 		char player_char;
 		block_arr area;
@@ -46,7 +47,7 @@
 			initialize_area(area[i]);			
 		}
 
-		// Can We call this the "Menu Loop"?
+		// The "menu loop" start...
 
 		do{
 			game_difficulty_level = menu(actual_option);
@@ -56,9 +57,15 @@
 				result = 0;
 				
 				player_char = select_player(actual_player);
+
+				// The game function start the party
+
 				result = game(area, &game_difficulty_level, &end_level, player_char);
 				
 				clear();
+
+				// This block only show the end result of the party
+
 				if(result > 15000){
 					printf(RED "\t\t\tGAME OVER!\n" RESET "\t\t\tScore: %d  :D\n\n", result);
 				} else if (result > 10000){

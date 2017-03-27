@@ -1,13 +1,14 @@
 #ifndef BBT_TYPES_H
 #define BBT_TYPES_H
 
-	#define A 80		// Area length.
-	#define L 10		// Area higth.
-	#define C 10		// Shot max quantity per array "level".
-	#define MT 20		// Mounster time appearance.
-	#define MC 15		// Mounster quantity per array "level".
-	#define TB 10		// Size of score table.
-	#define CH 6		// Cheats string length.
+	#define A 80			// Area length.
+	#define L 10			// Area higth.
+	#define C 10			// Shot max quantity per array "level".
+	#define MT 20			// Mounster time appearance.
+	#define MC 15			// Mounster quantity per array "level".
+	#define TB 10			// Size of score table.
+	#define CH 6			// Cheats string length.
+	#define VERSION "1.1"	// Acual version.
 
 	// Defining some MACROSS for the printf caracters colour.
 
@@ -19,21 +20,21 @@
 	#define CYAN    "\x1b[36m"
 	#define RESET   "\x1b[0m"
 
-	/* 
-		Defining the struct of every single position	
+	/*
+		Defining the struct of every single position
 	   	in the matrix.
 	*/
 
-	typedef struct 		
+	typedef struct
 	{
 		char c;
 		short pos;
 	} block;
 
-	typedef block block_arr[L][A+1]; // The matrix Area. 
+	typedef block block_arr[L][A+1]; // The matrix Area.
 
 	// Defining the enemy and bullet's struct.
-	   
+
 	typedef struct
 	{
 		short pos;
@@ -50,7 +51,7 @@
 		char difficulty[16];
 	} score;
 
-	/* 
+	/*
 		Fireball char struct, the mod is for
 	   	control & know the actual state of
 	   	the fireball in the area, & is_imp
@@ -65,13 +66,13 @@
 		short der;
 	} fireball;
 
-	/* 
+	/*
 		This five "enums" are uses in
 		menu.c for control who is the
 		current option
 	*/
 
-	enum 
+	enum
 	{
 		START_GAME,
 		SCORE_TAB,
@@ -80,7 +81,7 @@
 		EXIT
 	};
 
-	enum 
+	enum
 	{
 		EASY,
 		NORMAL,
@@ -96,7 +97,7 @@
 		THIRD
 	};
 
-	enum 
+	enum
 	{
 		MENU,
 		CLEAN

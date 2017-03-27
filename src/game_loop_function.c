@@ -67,7 +67,7 @@
 	}
 
 
-	int move_operations(block * area, bullet * shots, enemies * enemies, 
+	int move_operations(block * area, bullet * shots, enemies * local_enemies, 
 								fireball * ball, int * amount_of_shots, 
 								int * amount_of_enemies, int * is_fireball, int i)
 	{
@@ -75,19 +75,19 @@
 			move_fireball(area, ball, is_fireball);
 		}
 		move_shots(area, shots, amount_of_shots);
-		move_enem(area, enemies, amount_of_enemies);
+		move_enem(area, local_enemies, amount_of_enemies);
 
 		return 0;
 	}
 
 
-	int generate_enemies_control(block * area, enemies * enemies, int  * amount_of_enemies,
+	int generate_enemies_control(block * area, enemies * local_enemies, int  * amount_of_enemies,
 										int * enemies_time_appearance, int * enemies_per_level,
 										int * e_l, int * time, int * level, int enemies_number,
 										int * time_sleep, block_arr big_area)
 	{
 		if(!*time_sleep){
-			generate_enemies(area, enemies, amount_of_enemies,
+			generate_enemies(area, local_enemies, amount_of_enemies,
 							 enemies_time_appearance, enemies_per_level, e_l, 
 							 time, level ,enemies_number, time_sleep);
 		} else {

@@ -49,22 +49,42 @@
 		char cheat[CH];
 		fireball ball;
 
-		for(i = 0; i < CH - 1; i++) cheat[i] = ' ';
+		//	The party star after the player and difficulty selection.
+
+
+		for(i = 0; i < CH - 1; i++)
+		{
+			/*
+				This block initialize the char array for verify if the player
+				make some cool "cheat".
+			*/
+			cheat[i] = ' ';
+		}
 		cheat[CH-1]= '\0';
 
-		for(i = 0; i < L; i++) amount_of_shots[i] = 0, amount_of_enemies[i] = 0;
+		for(i = 0; i < L; i++)
+		{
+			// Another variable initialization...
+			amount_of_shots[i] = 0;
+			amount_of_enemies[i] = 0;
+		}
 
-		switch(*difficulty){
-		case EASY: 
+		switch(*difficulty)
+		{
+			/*
+				Some variables in base of the selected difficulty for the
+				game.
+			*/
+		case EASY:
 			dif_n = 0; enem_n = 1;
 			break;
-		case NORMAL: 
+		case NORMAL:
 			dif_n = 2; enem_n = 5;
 			break;
-		case HARD: 
+		case HARD:
 			dif_n = 4; enem_n = 10;
 			break;
-		case VERY_HARD: 
+		case VERY_HARD:
 			dif_n = 6; enem_n = 15;
 			break;
 		case HOPELESS:
@@ -72,10 +92,12 @@
 			break;
 		}
 
+		// handicap = Total amount of bullet per level
 		handicap = C - dif_n;
 		bullet shots[L][handicap];
 		enemies enem[L][MC];
 
+		// Special area, only for an easy control of the low level verification.
 		block null_area;
 		null_area.pos = -1;
 
@@ -85,10 +107,36 @@
 		printf_footbar(handicap, amount_of_shots, actual_row, total_score, level);
 		printf("press 't' for the tutorial or 'q' for exit\n");
 
-		do{
-			if((key = kbhit())){
+		// The basic <while true> loop begin.
+		do
+		{
+			// The key variable store the key that you press.
+			if((key = kbhit()))
+			{
+				// The tolower is only for a clear control of the key...
 				key = tolower(key);
-				switch(key){
+				switch(key)
+				{
+					/*
+						The 'd' and 'a' cases controls the horiontal move of
+						of the player.
+
+						The 'w' case only control the up movement, but if the
+						player are in the first level the case make the "jump"
+						animation (in other words, hardcoded movements).
+
+						The 's' case controls the down movement only if you are
+						not in the last level.
+
+						The 'k' case controls and generate a shoot, adding this
+						in the shots matrix.
+
+						All the cases mentioned before verify the cheat array
+						and turn a bit if there's a cheat in It.
+
+						For last, the 'p' case control the pause, where you can
+						quit the game and go back the main manu.
+					*/
 				case 'd':
 					is_cheat = verify_cheat(cheat, &cheat_type, key);
 					horizontal_move(A-2, 1, 1, area, actual_row, &actual_position, player_char, &direction);
@@ -99,16 +147,18 @@
 					break;
 				case 'w':
 					is_cheat = verify_cheat(cheat, &cheat_type, key);
-					if(actual_row == 1){
+					if(actual_row == 1)
+					{
 						jump(area, &actual_position, direction, player_char, 0);
 
-						for(i = 1; i < L; i++){
+						for(i = 1; i < L; i++)
+						{
 							move_operations(area[i], shots[i], enem[i], &ball, &(amount_of_shots[i]), &(amount_of_enemies[i]), &is_fb, i);
-							generate_enemies_control(area[i], enem[i], &(amount_of_enemies[i]), &num, &enem_level, 
+							generate_enemies_control(area[i], enem[i], &(amount_of_enemies[i]), &num, &enem_level,
 													 &e_l, &time, level, enem_n, &time_sleep, area);
 							total_score += verify_shots(area[i], enem[i], shots[i], &(amount_of_enemies[i]), &(amount_of_shots[i]), handicap);
 							fireball_control(&is_fb, i, &total_score, area[i], area[i-1], area[i+1],
-										 	 enem[i], enem[i-1], enem[i+1], &ball, &(amount_of_enemies[i]), 
+										 	 enem[i], enem[i-1], enem[i+1], &ball, &(amount_of_enemies[i]),
 										 	 &(amount_of_enemies[i-1]), &(amount_of_enemies[i+1]), &null_area);
 						}
 						draw(area, player_char);
@@ -117,13 +167,14 @@
 
 						jump(area, &actual_position, direction, player_char, 1);
 
-						for(i = 1; i < L; i++){
+						for(i = 1; i < L; i++)
+						{
 							move_operations(area[i], shots[i], enem[i], &ball, &(amount_of_shots[i]), &(amount_of_enemies[i]), &is_fb, i);
-							generate_enemies_control(area[i], enem[i], &(amount_of_enemies[i]), &num, &enem_level, 
+							generate_enemies_control(area[i], enem[i], &(amount_of_enemies[i]), &num, &enem_level,
 													 &e_l, &time, level, enem_n, &time_sleep, area);
 							total_score += verify_shots(area[i], enem[i], shots[i], &(amount_of_enemies[i]), &(amount_of_shots[i]), handicap);
 							fireball_control(&is_fb, i, &total_score, area[i], area[i-1], area[i+1],
-										 	 enem[i], enem[i-1], enem[i+1], &ball, &(amount_of_enemies[i]), 
+										 	 enem[i], enem[i-1], enem[i+1], &ball, &(amount_of_enemies[i]),
 										 	 &(amount_of_enemies[i-1]), &(amount_of_enemies[i+1]), &null_area);
 						}
 						draw(area, player_char);
@@ -139,7 +190,8 @@
 					break;
 				case 's':
 					is_cheat = verify_cheat(cheat, &cheat_type, key);
-					if(actual_row < L-1){
+					if(actual_row < L-1)
+					{
 						area[actual_row][actual_position].c = ' ';
 						actual_row++;
 						area[actual_row][actual_position].c = player_char;
@@ -147,7 +199,7 @@
 					break;
 				case 'k':
 					is_cheat = verify_cheat(cheat, &cheat_type, key);
-					generate_shots(area[actual_row], &(amount_of_shots[actual_row]), shots[actual_row], actual_row, actual_position, handicap, direction);
+					generate_shots(area[actual_row], &(amount_of_shots[actual_row]), shots[actual_row], actual_position, handicap, direction);
 					break;
 				case 'p':
 					pause_messege(pause_option, &quit);
@@ -155,31 +207,36 @@
 				}
 			}
 
-			if(!quit){
-
-				if(!is_cheat){
-					for(i = 1; i < L; i++){
+			if(!quit)
+			{
+				if(!is_cheat)
+				{
+					for(i = 1; i < L; i++)
+					{
 						move_operations(area[i], shots[i], enem[i], &ball, &(amount_of_shots[i]), &(amount_of_enemies[i]), &is_fb, i);
-						
-						generate_enemies_control(area[i], enem[i], &(amount_of_enemies[i]), &num, &enem_level, 
+
+						generate_enemies_control(area[i], enem[i], &(amount_of_enemies[i]), &num, &enem_level,
 												 &e_l, &time, level, enem_n, &time_sleep, area);
 
 						total_score += verify_shots(area[i], enem[i], shots[i], &(amount_of_enemies[i]), &(amount_of_shots[i]), handicap);
 						fireball_control(&is_fb, i, &total_score, area[i], area[i-1], area[i+1],
-										 enem[i], enem[i-1], enem[i+1], &ball, &(amount_of_enemies[i]), 
+										 enem[i], enem[i-1], enem[i+1], &ball, &(amount_of_enemies[i]),
 										 &(amount_of_enemies[i-1]), &(amount_of_enemies[i+1]), &null_area);
 
-						if(actual_row == i){
+						if(actual_row == i)
+						{
 							quit = verify_player(enem[i], area[i], actual_position, amount_of_enemies[i]);
 						}
 					}
 				} else {
-					switch(cheat_type){
-					case 1: 
+					switch(cheat_type)
+					{
+					case 1:
 						cheat_one(area[actual_row], &(amount_of_enemies[actual_row]), &(amount_of_shots[actual_row]), actual_position, player_char);
 						break;
 					case 2:
-						if(!is_fb){
+						if(!is_fb)
+						{
 							cheat_two(area[actual_row], &ball, actual_position, direction);
 							is_fb = actual_row;
 						}
@@ -187,16 +244,12 @@
 					}
 					is_cheat = 0;
 				}
-				
+
 				draw(area, player_char);
 				printf_footbar(handicap, amount_of_shots, actual_row, total_score, level);
 				_nanosleep(time);
-			} else {
-				time_sleep--;
 			}
-
 		} while(!quit);
 
 		return total_score;
 	}
-	

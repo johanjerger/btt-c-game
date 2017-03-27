@@ -116,40 +116,75 @@
 	}
 
 
-	static short score_tab_menu(short actual_score_tab_option)
+	static short score_tab_menu(short * actual_score_tab_option, short * actual_score_tab)
 	{
 		short c;
 		clear();
-		score_tab();
-		switch(actual_score_tab_option){
-			case MENU:
-				printf(YELLOW "\n\t\t\t     Back to the Menu " RESET "\n\t\t\t       Reset Table \n\n\n");
+		char _home[1024];
+
+		strcpy(_home, getenv("HOME"));
+		strcat(_home, "/.btt");
+		switch(*actual_score_tab){
+			case EASY:
+				strcat(_home, "EasyScoreTab");
 				break;
-			case CLEAN:
-				printf("\n\t\t\t     Back to the Menu \n\t\t\t" YELLOW "       Reset Table \n\n\n" RESET);
+			case NORMAL:
+				strcat(_home, "NormalScoreTab");
+				break;
+			case HARD:
+				strcat(_home, "HardScoreTab");
+				break;
+			case VERY_HARD:
+				strcat(_home, "VeryHardScoreTab");
+				break;
+			case HOPELESS:
+				strcat(_home, "HopelessScoreTab");
 				break;
 		}
+
+		score_tab(_home, *actual_score_tab);
+		switch(*actual_score_tab_option){
+			case MENU:
+				printf(YELLOW "\n\t\t\t       Back to Menu " RESET "\n\t\t\t       Reset Table \n\n\n");
+				break;
+			case CLEAN:
+				printf("\n\t\t\t       Back to Menu \n\t\t\t" YELLOW "       Reset Table \n\n\n" RESET);
+				break;
+		}
+		printf("\tUse the 'a' & 'd' to switch the differents score tables\n");
 		footbar_menu();
 		do {
 			c = getch();
-		} while ( c != 10 && c != 's' && c != 'w');
+		} while ( c != 10 && c != 's' && c != 'w' && c != 'a' && c != 'd');
 		c = tolower(c);
 		if(c == 10){
-			return actual_score_tab_option;
+			return 0;
 		} else if(c == 'w'){
-			if(actual_score_tab_option != MENU){
-				actual_score_tab_option--;
+			if((*actual_score_tab_option) != MENU){
+				(*actual_score_tab_option)--;
 			} else {
-				actual_score_tab_option = CLEAN;
+				(*actual_score_tab_option) = CLEAN;
 			}
 		} else if (c == 's'){
-			if(actual_score_tab_option != CLEAN){
-				actual_score_tab_option++;
+			if((*actual_score_tab_option) != CLEAN){
+				(*actual_score_tab_option)++;
 			} else {
-				actual_score_tab_option = MENU;
+				(*actual_score_tab_option) = MENU;
+			}
+		} else if (c == 'a') {
+			if((*actual_score_tab) != EASY){
+				(*actual_score_tab)--;
+			} else {
+				(*actual_score_tab) = HOPELESS;
+			}
+		} else if (c == 'd') {
+			if((*actual_score_tab) != HOPELESS){
+				(*actual_score_tab)++;
+			} else {
+				(*actual_score_tab) = EASY;
 			}
 		}
-		return score_tab_menu(actual_score_tab_option);
+		return score_tab_menu(actual_score_tab_option, actual_score_tab);
 	}
 
 
@@ -201,7 +236,7 @@
 
 	short menu(short actual_option)
 	{
-		short c, actual_difficulty = EASY, actual_score_tab_option = MENU;
+		short c, actual_difficulty = EASY, actual_score_tab_option = MENU, actual_score_tab = EASY;
 		char _home[256];
 		printf_menu();
 		switch(actual_option){
@@ -232,10 +267,27 @@
 					return start_game_menu(actual_difficulty);
 					break;
 				case SCORE_TAB:
-					actual_score_tab_option = score_tab_menu(actual_score_tab_option);
+					score_tab_menu(&actual_score_tab_option, &actual_score_tab);
 					if(actual_score_tab_option == CLEAN){
 						strcpy(_home, getenv("HOME"));
-						strcat(_home, "/.bttScoreTab");
+						strcat(_home, "/.btt");
+						switch(actual_score_tab){
+							case EASY:
+								strcat(_home, "EasyScoreTab");
+								break;
+							case NORMAL:
+								strcat(_home, "NormalScoreTab");
+								break;
+							case HARD:
+								strcat(_home, "HardScoreTab");
+								break;
+							case VERY_HARD:
+								strcat(_home, "VeryHardScoreTab");
+								break;
+							case HOPELESS:
+								strcat(_home, "HopelessScoreTab");
+								break;
+						}
 						create_score_tab(_home);
 					}
 					break;

@@ -48,7 +48,6 @@
 		char name[16];
 		int point;
 		short level;
-		char difficulty[16];
 	} score;
 
 	/*

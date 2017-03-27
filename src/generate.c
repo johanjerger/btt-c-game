@@ -71,7 +71,7 @@
 
 
 	int generate_shots(block * area, int * c_shots, bullet * shots, 
-					   int act_lv, int act, int handicap, int der)
+					   int act, int handicap, int der)
 	{
 		if((area[act+2].c != '-') && (area[act-2].c != '-')){
 			if(*c_shots < handicap){

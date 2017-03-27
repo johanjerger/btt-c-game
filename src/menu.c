@@ -33,21 +33,21 @@
 		clear();
 		printf(RED "\t\tXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n" RESET);
 		printf(RED "\t\tXX" YELLOW "X                                      X" RED "XX\n" RESET);
-		printf(RED "\t\tXX" BLUE "    XXXXXXX    XXXXXXXX    XXXXXXXXX    " RED "XX\n" RESET);
+		printf(RED "\t\tXX" BLUE "    XXXXXXX    XXXXXXXX     XXXXXXXX    " RED "XX\n" RESET);
 		printf(RED "\t\tXX" BLUE "    XX   XXX      XX           XX       " RED "XX\n" RESET);
 		printf(RED "\t\tXX" BLUE "    XXXXXXX       XX           XX       " RED "XX\n" RESET);
 		printf(RED "\t\tXX" BLUE "    XX   XXX      XX           XX       " RED "XX\n" RESET);
 		printf(RED "\t\tXX" BLUE "    XXXXXXX       XX           XX       " RED "XX\n" RESET);
 		printf(RED "\t\tXX" YELLOW "X                                      X" RED "XX\n" RESET);
 		printf(RED "\t\tXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n\n\n" RESET);
-	
+
 		return 0;
 	}
 
 
 	static void footbar_menu()
 	{
-		printf("\tUse the 'w' & 's' to switch the select option - press " GREEN "ENTER" RESET " to select\n\t\t\t\t\t\t\t  " CYAN "Version 1.0\n\n" RESET);
+		printf("\tUse the 'w' & 's' to switch the select option - press " GREEN "ENTER" RESET " to select\n\t\t\t\t\t\t\t  " CYAN "Version %s\n\n" RESET, VERSION);
 	}
 
 
@@ -55,7 +55,7 @@
 	{
 		printf_menu();
 		printf("\t\t\tIn the year 2057, an UFO descended\n\t\t\ton planet earth, infecting the entire\n\t\t\tplanet with " RED "cannibal orphans" RESET " with cold\n\t\t\tand mean feelings as a dead elephant.\n\n\t\t\tYou are the " BLUE "choosen one"RESET" to defend\n\t\t\tthe planet from evil " RED "cannibal orphans" RESET ".\n\n\t\t\tGrab your weaponds and go for them!\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
-		getchar();
+		while(getch() != 10);
 		clear();
 	}
 
@@ -64,11 +64,11 @@
 	{
 		printf_menu();
 		printf("\t\t\t\t " BLUE "TUTORIAL" RESET "\n\n\t\t\t\t'a' " RED "~>" RESET " Left\n\t\t\t\t'd' " RED "~>" RESET " Right\n\t\t\t\t'w' " RED "~>" RESET " Up\n\t\t\t\t's' " RED "~>" RESET " Down\n\t\t\t\t'k' " RED "~>" RESET " shots\n\t\t\t\t'p' " RED "~>" RESET " pause\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
-		getchar();
+		while(getch() != 10);
 		clear();
 	}
 
-	
+
 	static short start_game_menu(int actual_difficulty)
 	{
 		short c;
@@ -93,7 +93,9 @@
 				break;
 		}
 		footbar_menu();
-		c = getch();
+		do {
+			c = getch();
+		} while ( c != 10 && c != 's' && c != 'w');
 		c = tolower(c);
 		if(c == 10){
 			return actual_difficulty;
@@ -113,7 +115,7 @@
 		return start_game_menu(actual_difficulty);
 	}
 
-	
+
 	static short score_tab_menu(short actual_score_tab_option)
 	{
 		short c;
@@ -128,7 +130,9 @@
 				break;
 		}
 		footbar_menu();
-		c = getch();
+		do {
+			c = getch();
+		} while ( c != 10 && c != 's' && c != 'w');
 		c = tolower(c);
 		if(c == 10){
 			return actual_score_tab_option;
@@ -148,7 +152,7 @@
 		return score_tab_menu(actual_score_tab_option);
 	}
 
-	
+
 	short pause_messege(short actual_pause_option, short * quit)
 	{
 		short c;
@@ -163,7 +167,9 @@
 				break;
 		}
 		footbar_menu();
-		c = getch();
+		do {
+			c = getch();
+		} while ( c != 10 && c != 's' && c != 'w');
 		c = tolower(c);
 		if(c == 10){
 			switch(actual_pause_option){
@@ -216,7 +222,9 @@
 				break;
 		}
 		footbar_menu();
-		c = getch();
+		do {
+			c = getch();
+		} while ( c != 10 && c != 's' && c != 'w');
 		c = tolower(c);
 		if(c == 10){
 			switch(actual_option){
@@ -227,7 +235,7 @@
 					actual_score_tab_option = score_tab_menu(actual_score_tab_option);
 					if(actual_score_tab_option == CLEAN){
 						strcpy(_home, getenv("HOME"));
-						strcat(_home, "/bttScoreTab");
+						strcat(_home, "/.bttScoreTab");
 						create_score_tab(_home);
 					}
 					break;
@@ -276,7 +284,9 @@
 				break;
 		}
 		footbar_menu();
-		c = getch();
+		do {
+			c = getch();
+		} while ( c != 10 && c != 's' && c != 'w');
 		c = tolower(c);
 		if(c == 10){
 			switch(actual_player){

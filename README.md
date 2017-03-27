@@ -1,6 +1,6 @@
 # btt-c-game
 [![License: GPLv3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/license/gpl-3.0)
-[![Version: v1.0](https://img.shields.io/badge/Version-v1.0-blue.svg)](https://github.com/johanjerger/btt-c-game/releases/v1.0)
+[![Version: v1.1](https://img.shields.io/badge/Version-v1.1-blue.svg)](https://github.com/johanjerger/btt-c-game/releases/v1.1)
   
   btt is a c game, where you can see some concepts of this lenguage and have fun in your favorite terminal.
   

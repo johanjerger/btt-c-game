@@ -35,7 +35,7 @@
 		short i;
 
 		if((score_table = fopen(_home, "r+")) == NULL){
-			fprintf(stderr, "error -> %d\n", errno); 
+			fprintf(stderr, "error -> %d\n", errno);
 			exit(ERR_OPEN_FILE);
 		}
 
@@ -81,7 +81,7 @@
 		short i;
 
 		if((score_table = fopen(_home, "w+")) == NULL){
-			fprintf(stderr, "error -> %d\n", errno); 
+			fprintf(stderr, "error -> %d\n", errno);
 			exit(ERR_CREATING_FILE);
 		}
 		for(i = 0; i < TB; i++){
@@ -107,7 +107,7 @@
 		char _home[1024];
 
 		strcpy(_home, getenv("HOME"));
-		strcat(_home, "/bttScoreTab");
+		strcat(_home, "/.bttScoreTab");
 		clear();
 		if((score_table = fopen(_home, "r+")) == NULL){
 			create_score_tab(_home);
@@ -116,7 +116,7 @@
 		}
 		read_score_table(_home, imp_table);
 		if((score_table = fopen(_home, "r+")) == NULL){
-			fprintf(stderr, "error -> %d\n", errno); 
+			fprintf(stderr, "error -> %d\n", errno);
 			exit(ERR_OPEN_FILE);
 		}
 		printf_score_tab(imp_table);
@@ -153,7 +153,7 @@
 		}
 
 		strcpy(_home, getenv("HOME"));
-		strcat(_home, "/bttScoreTab");
+		strcat(_home, "/.bttScoreTab");
 
 		if((score_table = fopen(_home, "r+")) == NULL){
 			create_score_tab(_home);
@@ -219,7 +219,7 @@
 		}
 
 		if((score_table = fopen(_home, "r+")) == NULL){
-			fprintf(stderr, "error -> %d\n", errno); 
+			fprintf(stderr, "error -> %d\n", errno);
 			exit(ERR_OPEN_FILE);
 		}
 		for(i = 0; i < TB; i++){

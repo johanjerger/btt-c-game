@@ -8,7 +8,7 @@
 	#define MC 15			// Mounster quantity per array "level".
 	#define TB 10			// Size of score table.
 	#define CH 6			// Cheats string length.
-	#define VERSION "1.1"	// Acual version.
+	#define VERSION "1.2"	// Acual version.
 
 	// Defining some MACROSS for the printf caracters colour.
 

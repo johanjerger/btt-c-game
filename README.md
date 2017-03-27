@@ -18,13 +18,13 @@
   
   1. Download compressed 
   
-  [![btt-c-game-1.0.tar.gz: 34kb](https://img.shields.io/badge/btt--c--game--1.0.tar.gz-34kb-blue.svg)](https://github.com/johanjerger/btt-c-game/archive/v1.0.tar.gz) 
-  [![btt-c-game-1.0.zip: 45kb](https://img.shields.io/badge/btt--c--game--1.0.zip-45kb-blue.svg)](https://github.com/johanjerger/btt-c-game/archive/v1.0.zip)
+  [![btt-c-game-1.1.tar.gz: 34kb](https://img.shields.io/badge/btt--c--game--1.1.tar.gz-34kb-blue.svg)](https://github.com/johanjerger/btt-c-game/archive/v1.1.tar.gz) 
+  [![btt-c-game-1.1.zip: 45kb](https://img.shields.io/badge/btt--c--game--1.1.zip-45kb-blue.svg)](https://github.com/johanjerger/btt-c-game/archive/v1.1.zip)
   
   2. Descompress with your favorite program.
   
   ```
-    $ cd btt-c-game-1.0
+    $ cd btt-c-game-1.1
     $ make
     $ make install
   ```

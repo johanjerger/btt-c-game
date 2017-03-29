@@ -1,6 +1,8 @@
 #ifndef BTT_STB_H
 #define BTT_STB_H
 
+	double max_score();
+
 	short create_score_tab(char *);
 
 	short score_tab();

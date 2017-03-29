@@ -38,13 +38,13 @@
 		char player_char;
 		block_arr area;
 
-	  	/* 
+	  	/*
 	  		We initialice every single level
 	  		of the matrix area.
 	  	*/
 
 		for(i=0; i < L; i++){
-			initialize_area(area[i]);			
+			initialize_area(area[i]);
 		}
 
 		// The "menu loop" start...
@@ -53,15 +53,15 @@
 			game_difficulty_level = menu(actual_option);
 
 			if(game_difficulty_level != 'q'){
-				end_level = 1; 
+				end_level = 1;
 				result = 0;
-				
+
 				player_char = select_player(actual_player);
 
 				// The game function start the party
 
 				result = game(area, &game_difficulty_level, &end_level, player_char);
-				
+
 				clear();
 
 				// This block only show the end result of the party
@@ -75,11 +75,10 @@
 				} else {
 					printf(RED "\t\t\tGAME OVER!\n" RESET "\t\t\tScore: %d  :(\n\n", result);
 				}
-				
-				_nanosleep(2000);
-				
+				printf("\n\t\t\tpress " GREEN "ENTER" RESET "\n");
+				while((getch())!='\n');
 				is_high_score(result, end_level, game_difficulty_level);
-				
+
 				// We clean the area for another game.
 
 				for(i=0; i < L; i++){

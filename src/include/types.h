@@ -8,7 +8,7 @@
 	#define MC 15			// Mounster quantity per array "level".
 	#define TB 10			// Size of score table.
 	#define CH 6			// Cheats string length.
-	#define VERSION "1.2"	// Acual version.
+	#define VERSION "1.3"	// Acual version.
 
 	// Defining some MACROSS for the printf caracters colour.
 
@@ -19,6 +19,14 @@
 	#define MAGENTA "\x1b[35m"
 	#define CYAN    "\x1b[36m"
 	#define RESET   "\x1b[0m"
+
+	// Defining some MACROSS for the hisotry function.
+
+	#define EA     	750
+	#define ME   		700
+	#define HA  		650
+	#define VH   		600
+	#define HO 			100
 
 	/*
 		Defining the struct of every single position
@@ -106,6 +114,20 @@
 	{
 		RESUME,
 		QUIT
+	};
+
+	enum
+	{
+		PAGE1,
+		PAGE2,
+		PAGE3,
+		PAGE4,
+		PAGE5,
+		PAGE6,
+		PAGE7,
+		PAGE8,
+		PAGE9,
+		PAGE10
 	};
 
 #endif

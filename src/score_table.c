@@ -111,6 +111,88 @@
 	}
 
 
+	static double normalice_high_score(char * _home, int dif)
+	{
+		FILE * score_table;
+		double point = 0;
+		score score_row;
+
+		if((score_table = fopen(_home, "r+")) == NULL){
+			create_score_tab(_home);
+			if((score_table = fopen(_home, "r+")) == NULL){
+				fprintf(stderr, "error -> %d\n", errno);
+				exit(ERR_OPEN_FILE);
+			}
+		}
+		if((fread(&score_row.name, 1, sizeof(score_row.name), score_table)) == 0){
+			fprintf(stderr, "error -> %d\n", EIO);
+			exit(ERR_READ_FILE);
+		}
+		if((fread(&score_row.point, 1, sizeof(score_row.point), score_table)) == 0){
+			fprintf(stderr, "error -> %d\n", EIO);
+			exit(ERR_READ_FILE);
+		}
+		if((fread(&score_row.level, 1, sizeof(score_row.level), score_table)) == 0){
+			fprintf(stderr, "error -> %d\n", EIO);
+			exit(ERR_READ_FILE);
+		}
+
+		fclose(score_table);
+
+		switch (dif) {
+			case EASY:
+				point = score_row.point / 75;
+				break;
+			case NORMAL:
+				point = score_row.point / 70;
+				break;
+			case HARD:
+				point = score_row.point / 65;
+				break;
+			case VERY_HARD:
+				point = score_row.point / 60;
+				break;
+			case HOPELESS:
+				point = score_row.point / 10;
+				break;
+		}
+		return point;
+	}
+
+
+	double max_score()
+	{
+		double point = 0, aux = 0;
+		char _homeEasy[1024], _homeNormal[1024], _homeHard[1024], _homeVeryHard[1024], _homeHopeless[1024];
+		strcpy(_homeEasy, getenv("HOME"));
+		strcat(_homeEasy, "/.bttEasyScoreTab");
+		strcpy(_homeNormal, getenv("HOME"));
+		strcat(_homeNormal, "/.bttNormalScoreTab");
+		strcpy(_homeHard, getenv("HOME"));
+		strcat(_homeHard, "/.bttHardScoreTab");
+		strcpy(_homeVeryHard, getenv("HOME"));
+		strcat(_homeVeryHard, "/.bttVeryHardScoreTab");
+		strcpy(_homeHopeless, getenv("HOME"));
+		strcat(_homeHopeless, "/.bttHopelessScoreTab");
+
+		point = normalice_high_score(_homeEasy, EASY);
+		if (point < (aux = normalice_high_score(_homeNormal, NORMAL))) {
+			point = aux;
+		}
+		if (point < (aux = normalice_high_score(_homeHard, HARD))) {
+			point = aux;
+		}
+		if (point < (aux = normalice_high_score(_homeVeryHard, VERY_HARD))) {
+			point = aux;
+		}
+		if (point < (aux = normalice_high_score(_homeHopeless, HOPELESS))) {
+			point = aux;
+		}
+
+		return point;
+	}
+
+
 	short score_tab(char * _home, short actual_score_tab)
 	{
 		FILE * score_table;
@@ -171,9 +253,6 @@
 		read_score_table(_home, imp_table);
 
 		aux[0] = ' ';
-
-		printf("\n\t\t\tpress " GREEN "ENTER" RESET "\n");
-		while((getchar())!='\n');
 
 		for(i = 0, j = 1; i < TB; i++){
 			if(point >= imp_table[i].point){
@@ -236,7 +315,7 @@
 		printf_score_tab(imp_table, game_difficulty);
 		printf("\n");
 		printf("\n\t\t\t\tpress " GREEN "ENTER" RESET "\n");
-		while((getchar())!='\n');
+		while((getch())!='\n');
 
 		return 0;
 	}

@@ -51,12 +51,71 @@
 	}
 
 
-	static void history()
+	static int history(short * actual_page)
 	{
-		printf_menu();
-		printf("\t\t\tIn the year 2057, an UFO descended\n\t\t\ton planet earth, infecting the entire\n\t\t\tplanet with " RED "cannibal orphans" RESET " with cold\n\t\t\tand mean feelings as a dead elephant.\n\n\t\t\tYou are the " BLUE "choosen one"RESET" to defend\n\t\t\tthe planet from evil " RED "cannibal orphans" RESET ".\n\n\t\t\tGrab your weaponds and go for them!\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
-		while(getch() != 10);
+		int pages;
+		char c;
+		pages = (int) max_score() /  100;
+		if(pages > 9)
+		{
+			pages = 9;
+		}
 		clear();
+ 		printf_menu();
+		switch (*actual_page) {
+			case PAGE1:
+				printf("\t\t\tIn the year 2057, an UFO descended\n\t\t\ton planet earth, infecting the entire\n\t\t\tplanet with " RED "cannibal orphans" RESET " with cold\n\t\t\tand mean feelings as a dead elephant.\n\n\t\t\tYou are the " BLUE "choosen one"RESET" to defend\n\t\t\tthe planet from evil " RED "cannibal orphans" RESET ".\n\n\t\t\tGrab your weaponds and go for them!\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
+				break;
+			case PAGE2:
+				printf("\t\t\t\tComing soon,...\n\n\n\n\n\n\n\n\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
+				break;
+			case PAGE3:
+				printf("\t\t\t\tComing soon,...\n\n\n\n\n\n\n\n\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
+				break;
+			case PAGE4:
+				printf("\t\t\t\tComing soon,...\n\n\n\n\n\n\n\n\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
+				break;
+			case PAGE5:
+				printf("\t\t\t\tComing soon,...\n\n\n\n\n\n\n\n\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
+				break;
+			case PAGE6:
+				printf("\t\t\t\tComing soon,...\n\n\n\n\n\n\n\n\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
+				break;
+			case PAGE7:
+				printf("\t\t\t\tComing soon,...\n\n\n\n\n\n\n\n\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
+				break;
+			case PAGE8:
+				printf("\t\t\t\tComing soon,...\n\n\n\n\n\n\n\n\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
+				break;
+			case PAGE9:
+				printf("\t\t\t\tComing soon,...\n\n\n\n\n\n\n\n\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
+				break;
+			case PAGE10:
+				printf("\t\t\t\tComing soon,...\n\n\n\n\n\n\n\n\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
+				break;
+		}
+		printf("\n\tUse the 'a' & 'd' to switch the differents history pages\t page %d/%d\n", (*actual_page) + 1, pages + 1);
+		do {
+			c = getch();
+		} while ( c != 10 && c != 'a' && c != 'd');
+		c = tolower(c);
+		if(c == 10){
+			return 0;
+		} else if (c == 'a') {
+			if((*actual_page) != PAGE1){
+				(*actual_page)--;
+			} else {
+				(*actual_page) = pages;
+			}
+		} else if (c == 'd') {
+			if((*actual_page) != pages){
+				(*actual_page)++;
+			} else {
+				(*actual_page) = PAGE1;
+			}
+		}
+
+		return history(actual_page);
 	}
 
 
@@ -236,7 +295,7 @@
 
 	short menu(short actual_option)
 	{
-		short c, actual_difficulty = EASY, actual_score_tab_option = MENU, actual_score_tab = EASY;
+		short c, actual_page = PAGE1, actual_difficulty = EASY, actual_score_tab_option = MENU, actual_score_tab = EASY;
 		char _home[256];
 		printf_menu();
 		switch(actual_option){
@@ -292,7 +351,7 @@
 					}
 					break;
 				case HISTORY:
-					history();
+					history(&actual_page);
 					break;
 				case TUTORIAL:
 					tutorial();

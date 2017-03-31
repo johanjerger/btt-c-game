@@ -23,8 +23,8 @@
 #include <stdio.h>
 #include "include/types.h"
 
-	
-	static short cmp_fireball(block * area, enemies * enem, fireball * ball, 
+
+	static short cmp_fireball(block * area, enemies * enem, fireball * ball,
 							int * cnt_enem)
 	{
 		short arr_en[MC];
@@ -55,7 +55,7 @@
 	}
 
 
-	short verify_shots(block * area, enemies * enem, bullet * shots, 
+	short verify_shots(block * area, enemies * enem, bullet * shots,
 					 int * cnt_enem, int * cnt_shots, int handicap)
   	{
 		short points = 0;
@@ -142,9 +142,9 @@
 	}
 
 
-	short verify_fireball(block * area_act, block * area_top, block * area_lower, 
-						enemies * enem_act, enemies * enem_top, enemies * enem_lower, 
-						fireball * ball, int * cnt_enem_act, int * cnt_enem_top, 
+	short verify_fireball(block * area_act, block * area_top, block * area_lower,
+						enemies * enem_act, enemies * enem_top, enemies * enem_lower,
+						fireball * ball, int * cnt_enem_act, int * cnt_enem_top,
 						int * cnt_enem_lower, int * is_fireball)
   	{
 		short points = 0;
@@ -159,7 +159,7 @@
 					area_act[enem_act[i].pos].c = 'x';
 					ball->pos = enem_act[i].pos;
 					aux = i;
-					points += 100;
+					points += 150;
 					break;
 				}
 			}
@@ -192,13 +192,13 @@
 		} else if(ball->mod == 2){
 			ball->mod = 3;
 			area_act[ball->pos].c = ' ';
-			
+
 			points += cmp_fireball(area_act, enem_act, ball, cnt_enem_act);
 			points += cmp_fireball(area_top, enem_top, ball, cnt_enem_top);
 			if(area_lower->pos != -1){
 				points += cmp_fireball(area_lower, enem_lower, ball, cnt_enem_lower);
 			}
-		
+
 		} else if(ball->mod == 3){
 			ball->mod = 0;
       		ball->is_imp = 0;

@@ -103,7 +103,7 @@
 
 		area[actual_row][actual_position].c = player_char;
 
-		draw(area, player_char);
+		draw(area);
 		printf_footbar(handicap, amount_of_shots, actual_row, total_score, level);
 		printf("press 't' for the tutorial or 'q' for exit\n");
 
@@ -161,7 +161,7 @@
 										 	 enem[i], enem[i-1], enem[i+1], &ball, &(amount_of_enemies[i]),
 										 	 &(amount_of_enemies[i-1]), &(amount_of_enemies[i+1]), &null_area);
 						}
-						draw(area, player_char);
+						draw(area);
 						printf_footbar(handicap, amount_of_shots, actual_row, total_score, level);
 						_nanosleep(time);
 
@@ -177,7 +177,7 @@
 										 	 enem[i], enem[i-1], enem[i+1], &ball, &(amount_of_enemies[i]),
 										 	 &(amount_of_enemies[i-1]), &(amount_of_enemies[i+1]), &null_area);
 						}
-						draw(area, player_char);
+						draw(area);
 						printf_footbar(handicap, amount_of_shots, actual_row, total_score, level);
 						_nanosleep(time);
 
@@ -245,7 +245,7 @@
 					is_cheat = 0;
 				}
 
-				draw(area, player_char);
+				draw(area);
 				printf_footbar(handicap, amount_of_shots, actual_row, total_score, level);
 				_nanosleep(time);
 			}

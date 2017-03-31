@@ -19,7 +19,7 @@
 *
 ***************************************************************************/
 
-#include "include/types.h"	
+#include "include/types.h"
 
 
 	int move_shots(block * area, bullet * shots, int * cnt_shots)
@@ -144,7 +144,7 @@
 		} else if(mod == 1){
 			if(der){
 				if(area[0][*act].pos != A - 2){
-					area[0][(*act)++].c = ' ';				
+					area[0][(*act)++].c = ' ';
 					area[0][*act].c = pj;
 				}
 			} else {

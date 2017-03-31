@@ -67,10 +67,10 @@
 				printf("\t\t\tIn the year 2057, an UFO descended\n\t\t\ton planet earth, infecting the entire\n\t\t\tplanet with " RED "cannibal orphans" RESET " with cold\n\t\t\tand mean feelings as a dead elephant.\n\n\t\t\tYou are the " BLUE "choosen one"RESET" to defend\n\t\t\tthe planet from evil " RED "cannibal orphans" RESET ".\n\n\t\t\tGrab your weaponds and go for them!\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
 				break;
 			case PAGE2:
-				printf("\t\t\t\tComing soon,...\n\n\n\n\n\n\n\n\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
+				printf("\t\t\tTwo months have passed since the\n\t\t\tUFO descended. You and your squad have\n\t\t\tfound small hints indicating that the \n\t\t\t" RED "enemy base" RESET" is nearby.\n\n\t\t\tThe " RED "Cannibal orphans" RESET " have stolen all\n\t\t\tthe mothers of " BLUE "planet earth" RESET ",\n\t\t\tso that at last someone treats\n\t\t\tthem as people, unfortunately, the\n\t\t\tPhaders didn't have the same fate...\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
 				break;
 			case PAGE3:
-				printf("\t\t\t\tComing soon,...\n\n\n\n\n\n\n\n\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
+				printf("\t\t\tYou finally found the enemy base, looking\n\t\t\tat it from a hill you see how the " RED "cannibal" RESET "\n\t\t\t" RED "orphans" RESET " violently rape the motehrs in\n\t\t\torder to reproduce and dominate \n\t\t\t" BLUE "planet earth" RESET ".\n\n\t\t\tNot only the mothers, You see as there\n\t\t\tare also helpless girls. " BLUE "You an your" RESET "\n\t\t\t" BLUE "squad" RESET " are subjected to hear those\n\t\t\tcries of pain and see that tears.\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
 				break;
 			case PAGE4:
 				printf("\t\t\t\tComing soon,...\n\n\n\n\n\n\n\n\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");

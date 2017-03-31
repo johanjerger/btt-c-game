@@ -34,7 +34,7 @@
 	short clear()
 	{
 		if((system("clear")) == -1){
-			fprintf(stderr, "error -> %d\n", errno); 
+			fprintf(stderr, "error -> %d\n", errno);
 			exit(ERR_SYS);
 		}
 
@@ -44,7 +44,7 @@
 
 	short _nanosleep(int time)
 	{
-		/* 
+		/*
 			timespec struct is use for
 			every "sleep" time during
 			the game.
@@ -54,8 +54,8 @@
 	  	ts.tv_sec = time / 1000;
 	  	ts.tv_nsec = (time % 1000) * 1000000;
 
-		if((nanosleep(&ts, NULL)) == -1){ 
-			fprintf(stderr, "error -> %d\n", errno); 
+		if((nanosleep(&ts, NULL)) == -1){
+			fprintf(stderr, "error -> %d\n", errno);
 			exit(ERR_SYS);
 		}
 
@@ -123,26 +123,29 @@
 	}
 
 
-	short draw(block_arr area, int player_char)
+	short draw(block_arr area)
 	{
-		short i, j;
+		short i, j, top = A-1;
+		char ch;
 		clear();
-		for(i = 0; i < L; i++){
-			j = 0;
+		for(i = 0; i != L; i++)
+		{
 			printf(MAGENTA "|" RESET);
-			for(j = 1; j < A-1; j++){
-				if(area[i][j].c == '#'){
-					printf(GREEN "#" RESET);
-				} else if(area[i][j].c == player_char){
-					printf(CYAN "%c" RESET, area[i][j].c);
-				} else if(area[i][j].c == 'x'){
-					printf(RED "X" RESET);
-				} else if(area[i][j].c == '-'){
-					printf(BLUE "-" RESET);
-				} else if(area[i][j].c != ' '){
-					printf(CYAN "%c" RESET, area[i][j].c);
-				} else {
-					printf("%c", area[i][j].c);
+			for(j = 1; j != top; j++)
+			{
+				ch = area[i][j].c;
+				switch (ch)
+				{
+					case ' ':
+						printf(" "); break;
+					case '#':
+						printf(GREEN "#"); break;
+					case '-':
+						printf(BLUE "-"); break;
+					case 'x':
+						printf(RED "X"); break;
+					default:
+						printf(CYAN "%c", ch); break;
 				}
 			}
 			printf(MAGENTA "|\n" RESET);

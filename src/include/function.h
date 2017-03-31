@@ -11,6 +11,6 @@
 
 	short initialize_area(block *);
 
-	short draw(block_arr, int);
+	short draw(block_arr);
 
 #endif

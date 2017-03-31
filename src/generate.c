@@ -24,8 +24,8 @@
 #include "include/types.h"
 
 
-	int generate_enemies(block * area, enemies * enem, int * cnt_enem, 
-						 int * num, int * enem_level, int * e_l, int * time, 
+	int generate_enemies(block * area, enemies * enem, int * cnt_enem,
+						 int * num, int * enem_level, int * e_l, int * time,
 						 int * level, int enemy_num, int * time_sleep)
   	{
 		int side;
@@ -70,7 +70,7 @@
 	}
 
 
-	int generate_shots(block * area, int * c_shots, bullet * shots, 
+	int generate_shots(block * area, int * c_shots, bullet * shots,
 					   int act, int handicap, int der)
 	{
 		if((area[act+2].c != '-') && (area[act-2].c != '-')){

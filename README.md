@@ -6,7 +6,7 @@
 
 ## Note
 
-- If you are an older player for btt, please see the changelog.rm file.
+- If you are an older player for btt, please see the changelog.md file.
 
   
 ## Installation

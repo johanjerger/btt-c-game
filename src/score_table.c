@@ -23,6 +23,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include "include/error.h"
 #include "include/types.h"
 #include "include/function.h"
@@ -90,8 +92,21 @@
 	short create_score_tab(char * _home)
 	{
 		FILE * score_table;
+		char _homeBox[1024];
 		score score_row;
 		short i;
+
+
+		strcpy(_homeBox, getenv("HOME"));
+		strcat(_homeBox, "/.bttConfig");
+		if(mkdir(_homeBox, 0777) != EEXIST)
+		{
+			if(mkdir(_homeBox, 0777) != EEXIST)
+			{
+				fprintf(stderr, "%s\n", "error");
+			}
+		}
+
 
 		if((score_table = fopen(_home, "w+")) == NULL){
 			fprintf(stderr, "error -> %d\n", errno);
@@ -165,15 +180,15 @@
 		double point = 0, aux = 0;
 		char _homeEasy[1024], _homeNormal[1024], _homeHard[1024], _homeVeryHard[1024], _homeHopeless[1024];
 		strcpy(_homeEasy, getenv("HOME"));
-		strcat(_homeEasy, "/.bttEasyScoreTab");
+		strcat(_homeEasy, "/.bttConfig/bttEasyScoreTab");
 		strcpy(_homeNormal, getenv("HOME"));
-		strcat(_homeNormal, "/.bttNormalScoreTab");
+		strcat(_homeNormal, "/.bttConfig/bttNormalScoreTab");
 		strcpy(_homeHard, getenv("HOME"));
-		strcat(_homeHard, "/.bttHardScoreTab");
+		strcat(_homeHard, "/.bttConfig/bttHardScoreTab");
 		strcpy(_homeVeryHard, getenv("HOME"));
-		strcat(_homeVeryHard, "/.bttVeryHardScoreTab");
+		strcat(_homeVeryHard, "/.bttConfig/bttVeryHardScoreTab");
 		strcpy(_homeHopeless, getenv("HOME"));
-		strcat(_homeHopeless, "/.bttHopelessScoreTab");
+		strcat(_homeHopeless, "/.bttConfig/bttHopelessScoreTab");
 
 		point = normalice_high_score(_homeEasy, EASY);
 		if (point < (aux = normalice_high_score(_homeNormal, NORMAL))) {
@@ -221,11 +236,13 @@
 		FILE * score_table;
 		score imp_table[TB];
 		char aux[1024], aux_name[1024];
-		short i, j, c, pos = TB, aux_point = 0, aux_level = 1;
+		short i, j, c, pos = TB, aux_level = 1;
+		int aux_point = 0;
 		char _home[1024];
 
+
 		strcpy(_home, getenv("HOME"));
-		strcat(_home, "/.btt");
+		strcat(_home, "/.bttConfig/btt");
 		switch(game_difficulty){
 			case EASY:
 				strcat(_home, "EasyScoreTab");

@@ -182,7 +182,7 @@
 		char _home[1024];
 
 		strcpy(_home, getenv("HOME"));
-		strcat(_home, "/.btt");
+		strcat(_home, "/.bttConfig/btt");
 		switch(*actual_score_tab){
 			case EASY:
 				strcat(_home, "EasyScoreTab");
@@ -329,7 +329,7 @@
 					score_tab_menu(&actual_score_tab_option, &actual_score_tab);
 					if(actual_score_tab_option == CLEAN){
 						strcpy(_home, getenv("HOME"));
-						strcat(_home, "/.btt");
+						strcat(_home, "/.bttConfig/btt");
 						switch(actual_score_tab){
 							case EASY:
 								strcat(_home, "EasyScoreTab");

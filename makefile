@@ -3,8 +3,8 @@ BUILD_FOLDER=build
 TEMPORAL_FOLDER=tmp
 INSTALL_FOLDER=/usr/bin
 
-CFLAG=-O3 -Wall -std=gnu11
-DEBUG=-g
+CFLAG=-O3 -Wall -std=gnu11 -pedantic -Wextra -Wcast-qual -Wwrite-strings -Wshadow
+# DEBUG=-g 
 
 
 .PHONY: all clean folders install uninstall reinstall
@@ -36,3 +36,11 @@ uninstall: $(INSTALL_FOLDER)/btt
 		rm $(INSTALL_FOLDER)/btt
 
 reinstall: uninstall install
+
+lines:
+		@ printf "	.c files               "
+		@ wc -l $(SOURCE_FOLDER)/*.c | grep total
+		@ printf "	.h files      		"
+		@ wc -l $(SOURCE_FOLDER)/include/* | grep total
+
+compile_install: all install

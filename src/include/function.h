@@ -1,6 +1,7 @@
 #ifndef BTT_FUNC_H
 #define BTT_FUNC_H
 
+
 	short clear();
 
 	short _nanosleep(int);

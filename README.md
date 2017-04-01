@@ -3,6 +3,11 @@
 [![Version: v1.1](https://img.shields.io/badge/Version-v1.1-blue.svg)](https://github.com/johanjerger/btt-c-game/releases/v1.1)
   
   btt is a c game, where you can see some concepts of this lenguage and have fun in your favorite terminal.
+
+## Note
+
+- If you are an older player for btt, please see the changelog.rm file.
+
   
 ## Installation
   

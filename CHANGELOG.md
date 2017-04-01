@@ -1,12 +1,6 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
-### Added
-- mathematical field C-like object
-
-### Changed
-- filesystem changes
 
 ## v0.2 - 5/06/2016
 ### Added

@@ -293,7 +293,7 @@
 	}
 
 
-	short menu(short actual_option)
+	short main_menu(short actual_option)
 	{
 		short c, actual_page = PAGE1, actual_difficulty = EASY, actual_score_tab_option = MENU, actual_score_tab = EASY;
 		char _home[256];
@@ -357,7 +357,7 @@
 					tutorial();
 					break;
 				case EXIT:
-					return 'q';
+					exit(0);
 					break;
 			}
 		} else if(c == 'w'){
@@ -374,11 +374,11 @@
 			}
 		}
 
-		return menu(actual_option);
+		return main_menu(actual_option);
 	}
 
 
-	short select_player(short actual_player)
+	short select_player_menu(short actual_player)
 	{
 		short c;
 		printf_menu();
@@ -424,5 +424,15 @@
 				actual_player = FIRST;
 			}
 		}
-		return select_player(actual_player);
+		return select_player_menu(actual_player);
+	}
+
+	short menu()
+	{
+		return main_menu(START_GAME);
+	}
+
+	short select_player()
+	{
+		return select_player_menu(FIRST);
 	}

@@ -32,39 +32,39 @@
 		int success = 0;
 
 		if(!*num){
-				//num = rand() % (n - m + 1) + m   ---  [M, N]
-				*num = rand() % (MT - enemy_num) + 1;
-				if(*cnt_enem < MC){
-					side = rand() % (21) - 10;
-					if(side >= 0){
-						enem[*cnt_enem].pos = 1;
-						enem[*cnt_enem].der = 1;
-						if((area[enem[*cnt_enem].pos+1].c) != '#'){
-							success = 1;
-							area[enem[*cnt_enem].pos].c = '#';
-						}
-					} else {
-						enem[*cnt_enem].pos = A - 2;
-						enem[*cnt_enem].der = 0;
-						if((area[enem[*cnt_enem].pos-1].c) != '#'){
-							success = 1;
-							area[enem[*cnt_enem].pos].c = '#';
-						}
+			//num = rand() % (n - m + 1) + m   ---  [M, N]
+			*num = rand() % (MT - enemy_num) + 1;
+			if(*cnt_enem < MC){
+				side = rand() % (21) - 10;
+				if(side >= 0){
+					enem[*cnt_enem].pos = 1;
+					enem[*cnt_enem].der = 1;
+					if((area[enem[*cnt_enem].pos+1].c) != '#'){
+						success = 1;
+						area[enem[*cnt_enem].pos].c = '#';
 					}
-					if(success){
-						(*enem_level)--;
-						if(!*enem_level){
-							*time -= 15;
-							*time_sleep = 1000;
-							(*level)++;
-							*enem_level = (*e_l) * (*level);
-						}
-						(*cnt_enem)++;
+				} else {
+					enem[*cnt_enem].pos = A - 2;
+					enem[*cnt_enem].der = 0;
+					if((area[enem[*cnt_enem].pos-1].c) != '#'){
+						success = 1;
+						area[enem[*cnt_enem].pos].c = '#';
 					}
 				}
-			} else {
-				(*num)--;
+				if(success){
+					(*enem_level)--;
+					if(!*enem_level){
+						*time -= 15;
+						*time_sleep = 1000;
+						(*level)++;
+						*enem_level = (*e_l) * (*level);
+					}
+					(*cnt_enem)++;
+				}
 			}
+		} else {
+			(*num)--;
+		}
 
 		return 0;
 	}

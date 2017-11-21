@@ -5,8 +5,12 @@
 
 	short pause_messege(short, short *);
 
-	short menu(short);
+	short main_menu(short);
 
-	short select_player(short);
+	short select_player_menu(short);
+
+	short menu();
+
+	short select_player();
 
 #endif

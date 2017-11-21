@@ -34,7 +34,6 @@
 	{
 		int result;
 		int i, game_difficulty_level, end_level;
-		int actual_option = START_GAME, actual_player = FIRST;
 		char player_char;
 		block_arr area;
 
@@ -50,45 +49,43 @@
 		// The "menu loop" start...
 
 		do{
-			game_difficulty_level = menu(actual_option);
+			game_difficulty_level = menu();
 
-			if(game_difficulty_level != 'q'){
-				end_level = 1;
-				result = 0;
+			
+			end_level = 1;
+			result = 0;
 
-				player_char = select_player(actual_player);
+			player_char = select_player();
 
-				// The game function start the party
+			// The game function start the party
 
-				result = game(area, &game_difficulty_level, &end_level, player_char);
+			result = game(area, &game_difficulty_level, &end_level, player_char);
 
-				clear();
+			clear();
 
-				// This block only show the end result of the party
+			// This block only show the end result of the party
 
-				if(result > 15000){
-					printf(RED "\t\t\tGAME OVER!\n" RESET "\t\t\tScore: %d  :D\n\n", result);
-				} else if (result > 10000){
-					printf(RED "\t\t\tGAME OVER!\n" RESET "\t\t\tScore: %d  :)\n\n", result);
-				} else if(result > 5000){
-					printf(RED "\t\t\tGAME OVER!\n" RESET "\t\t\tScore: %d  :|\n\n", result);
-				} else {
-					printf(RED "\t\t\tGAME OVER!\n" RESET "\t\t\tScore: %d  :(\n\n", result);
-				}
-				printf("\n\t\t\tpress " GREEN "ENTER" RESET "\n");
-				while((getch())!='\n');
-				is_high_score(result, end_level, game_difficulty_level);
-
-				// We clean the area for another game.
-
-				for(i=0; i < L; i++){
-					initialize_area(area[i]);
-				}
+			if(result > 15000){
+				printf(RED "\t\t\tGAME OVER!\n" RESET "\t\t\tScore: %d  :D\n\n", result);
+			} else if (result > 10000){
+				printf(RED "\t\t\tGAME OVER!\n" RESET "\t\t\tScore: %d  :)\n\n", result);
+			} else if(result > 5000){
+				printf(RED "\t\t\tGAME OVER!\n" RESET "\t\t\tScore: %d  :|\n\n", result);
+			} else {
+				printf(RED "\t\t\tGAME OVER!\n" RESET "\t\t\tScore: %d  :(\n\n", result);
 			}
+			printf("\n\t\t\tpress " GREEN "ENTER" RESET "\n");
+			while((getch())!='\n');
+			is_high_score(result, end_level, game_difficulty_level);
 
-		} while((game_difficulty_level != 'q'));
+			// We clean the area for another game.
 
-		clear();
+			for(i=0; i < L; i++){
+				initialize_area(area[i]);
+			}
+			
+
+		} while(1);
 
 		return 0;
 	}

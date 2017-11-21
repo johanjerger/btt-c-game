@@ -203,53 +203,54 @@
 					break;
 				case 'p':
 					pause_messege(pause_option, &quit);
+					if (quit) return total_score;
 					break;
 				}
 			}
 
-			if(!quit)
+
+			if(!is_cheat)
 			{
-				if(!is_cheat)
+				for(i = 1; i < L; i++)
 				{
-					for(i = 1; i < L; i++)
+					move_operations(area[i], shots[i], enem[i], &ball, &(amount_of_shots[i]), &(amount_of_enemies[i]), &is_fb, i);
+
+					generate_enemies_control(area[i], enem[i], &(amount_of_enemies[i]), &num, &enem_level,
+											 &e_l, &time, level, enem_n, &time_sleep, area);
+
+					total_score += verify_shots(area[i], enem[i], shots[i], &(amount_of_enemies[i]), &(amount_of_shots[i]), handicap);
+					fireball_control(&is_fb, i, &total_score, area[i], area[i-1], area[i+1],
+									 enem[i], enem[i-1], enem[i+1], &ball, &(amount_of_enemies[i]),
+									 &(amount_of_enemies[i-1]), &(amount_of_enemies[i+1]), &null_area);
+
+					if(actual_row == i)
 					{
-						move_operations(area[i], shots[i], enem[i], &ball, &(amount_of_shots[i]), &(amount_of_enemies[i]), &is_fb, i);
-
-						generate_enemies_control(area[i], enem[i], &(amount_of_enemies[i]), &num, &enem_level,
-												 &e_l, &time, level, enem_n, &time_sleep, area);
-
-						total_score += verify_shots(area[i], enem[i], shots[i], &(amount_of_enemies[i]), &(amount_of_shots[i]), handicap);
-						fireball_control(&is_fb, i, &total_score, area[i], area[i-1], area[i+1],
-										 enem[i], enem[i-1], enem[i+1], &ball, &(amount_of_enemies[i]),
-										 &(amount_of_enemies[i-1]), &(amount_of_enemies[i+1]), &null_area);
-
-						if(actual_row == i)
-						{
-							quit = verify_player(enem[i], area[i], actual_position, amount_of_enemies[i]);
-						}
+						quit = verify_player(enem[i], area[i], actual_position, amount_of_enemies[i]);
+						if (quit) return total_score;
+						continue;
 					}
-				} else {
-					switch(cheat_type)
-					{
-					case 1:
-						cheat_one(area[actual_row], &(amount_of_enemies[actual_row]), &(amount_of_shots[actual_row]), actual_position, player_char);
-						break;
-					case 2:
-						if(!is_fb)
-						{
-							cheat_two(area[actual_row], &ball, actual_position, direction);
-							is_fb = actual_row;
-						}
-						break;
-					}
-					is_cheat = 0;
 				}
-
-				draw(area);
-				printf_footbar(handicap, amount_of_shots, actual_row, total_score, level);
-				_nanosleep(time);
+			} else {
+				switch(cheat_type)
+				{
+				case 1:
+					cheat_one(area[actual_row], &(amount_of_enemies[actual_row]), &(amount_of_shots[actual_row]), actual_position, player_char);
+					break;
+				case 2:
+					if(!is_fb)
+					{
+						cheat_two(area[actual_row], &ball, actual_position, direction);
+						is_fb = actual_row;
+					}
+					break;
+				}
+				is_cheat = 0;
 			}
-		} while(!quit);
+
+			draw(area);
+			printf_footbar(handicap, amount_of_shots, actual_row, total_score, level);
+			_nanosleep(time);
+		} while(1);
 
 		return total_score;
 	}

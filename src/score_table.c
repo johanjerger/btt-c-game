@@ -27,70 +27,71 @@
 #include <sys/types.h>
 #include "include/error.h"
 #include "include/types.h"
+#include "include/menu_enums.h"
 #include "include/function.h"
 
 
-	static void read_score_table(char * _home, score * imp_table)
-	{
+static void read_score_table(char * _home, score * imp_table)
+{
 		FILE * score_table;
 		score score_row;
 		short i;
 
-		if((score_table = fopen(_home, "r+")) == NULL){
-			fprintf(stderr, "error -> %d\n", errno);
-			exit(ERR_OPEN_FILE);
+		if((score_table = fopen(_home, "r+")) == NULL) {
+				fprintf(stderr, "error -> %d\n", errno);
+				exit(ERR_OPEN_FILE);
 		}
 
-		for(i = 0; i < TB; i++){
-			if((fread(&score_row.name, 1, sizeof(score_row.name), score_table)) == 0){
-				fprintf(stderr, "error -> %d\n", EIO);
-				exit(ERR_READ_FILE);
-			}
-      if((fread(&score_row.point, 1, sizeof(score_row.point), score_table)) == 0){
-      	fprintf(stderr, "error -> %d\n", EIO);
-      	exit(ERR_READ_FILE);
-      }
-	    if((fread(&score_row.level, 1, sizeof(score_row.level), score_table)) == 0){
-				fprintf(stderr, "error -> %d\n", EIO);
-				exit(ERR_READ_FILE);
-			}
-      imp_table[i] = score_row;
+		for(i = 0; i < TB; i++) {
+				if((fread(&score_row.name, 1, sizeof(score_row.name), score_table)) == 0) {
+						fprintf(stderr, "error -> %d\n", EIO);
+						exit(ERR_READ_FILE);
+				}
+				if((fread(&score_row.point, 1, sizeof(score_row.point), score_table)) == 0) {
+						fprintf(stderr, "error -> %d\n", EIO);
+						exit(ERR_READ_FILE);
+				}
+				if((fread(&score_row.level, 1, sizeof(score_row.level), score_table)) == 0) {
+						fprintf(stderr, "error -> %d\n", EIO);
+						exit(ERR_READ_FILE);
+				}
+				imp_table[i] = score_row;
 		}
 		fclose(score_table);
-	}
+}
 
 
-	static void printf_score_tab(score * imp_table, short actual_score_tab)
-	{
+static void printf_score_tab(score * imp_table, short actual_score_tab)
+{
 		short i;
 
-		switch(actual_score_tab){
-			case EASY:
+		switch(actual_score_tab) {
+		case EASY:
 				printf(BLUE "\t\t\tEASY SCORE TAB\n\n" RESET);
 				break;
-			case NORMAL:
+		case NORMAL:
 				printf(BLUE "\t\t\tNORMAL SCORE TAB\n\n" RESET);
 				break;
-			case HARD:
+		case HARD:
 				printf(BLUE "\t\t\tHARD SCORE TAB\n\n" RESET);
 				break;
-			case VERY_HARD:
+		case VERY_HARD:
 				printf(BLUE "\t\t\tVERY HARD SCORE TAB\n\n" RESET);
 				break;
-			case HOPELESS:
+		case HOPELESS:
 				printf(BLUE "\t\t\tHOPELESS SCORE TAB\n\n" RESET);
 				break;
 		}
 
 		printf(YELLOW "%-10s" BLUE "     ---     " YELLOW "%-10s" BLUE "     ---     " YELLOW "%-10s\n" RESET, " name", " score", " level");
-		for(i = 0; i < TB; i++){
-			printf("%-10s     " BLUE "---" RESET "     %10d     " BLUE "---" RESET "     %10d     \n" RESET, imp_table[i].name, imp_table[i].point, imp_table[i].level);
+		for(i = 0; i < TB; i++) {
+				printf("%-10s     " BLUE "---" RESET "     %10d     " BLUE "---" RESET "     %10d     \n" RESET, imp_table[i].name, imp_table[i].point, imp_table[i].level);
 		}
-	}
+}
 
 
-	short create_score_tab(char * _home)
-	{
+short create_score_tab(char * _home)
+{
 		FILE * score_table;
 		char _homeBox[1024];
 		score score_row;
@@ -101,82 +102,82 @@
 		strcat(_homeBox, "/.bttConfig");
 		if(mkdir(_homeBox, 0777) != EEXIST)
 		{
-			if(mkdir(_homeBox, 0777) != EEXIST)
-			{
-				fprintf(stderr, "%s\n", "error");
-			}
+				if(mkdir(_homeBox, 0777) != EEXIST)
+				{
+						fprintf(stderr, "%s\n", "error");
+				}
 		}
 
 
-		if((score_table = fopen(_home, "w+")) == NULL){
-			fprintf(stderr, "error -> %d\n", errno);
-			exit(ERR_CREATING_FILE);
+		if((score_table = fopen(_home, "w+")) == NULL) {
+				fprintf(stderr, "error -> %d\n", errno);
+				exit(ERR_CREATING_FILE);
 		}
-		for(i = 0; i < TB; i++){
-			strcpy(score_row.name, " ----- ");
-			score_row.point = 0;
-			score_row.level = 1;
-			fwrite(&score_row.name, sizeof(score_row.name), 1, score_table);
-			fwrite(&score_row.point, sizeof(score_row.point), 1, score_table);
-			fwrite(&score_row.level, sizeof(score_row.level), 1, score_table);
+		for(i = 0; i < TB; i++) {
+				strcpy(score_row.name, " ----- ");
+				score_row.point = 0;
+				score_row.level = 1;
+				fwrite(&score_row.name, sizeof(score_row.name), 1, score_table);
+				fwrite(&score_row.point, sizeof(score_row.point), 1, score_table);
+				fwrite(&score_row.level, sizeof(score_row.level), 1, score_table);
 		}
 		fclose(score_table);
 
 		return 0;
-	}
+}
 
 
-	static double normalice_high_score(char * _home, int dif)
-	{
+static double normalice_high_score(char * _home, int dif)
+{
 		FILE * score_table;
 		double point = 0;
 		score score_row;
 
-		if((score_table = fopen(_home, "r+")) == NULL){
-			create_score_tab(_home);
-			if((score_table = fopen(_home, "r+")) == NULL){
-				fprintf(stderr, "error -> %d\n", errno);
-				exit(ERR_OPEN_FILE);
-			}
+		if((score_table = fopen(_home, "r+")) == NULL) {
+				create_score_tab(_home);
+				if((score_table = fopen(_home, "r+")) == NULL) {
+						fprintf(stderr, "error -> %d\n", errno);
+						exit(ERR_OPEN_FILE);
+				}
 		}
-		if((fread(&score_row.name, 1, sizeof(score_row.name), score_table)) == 0){
-			fprintf(stderr, "error -> %d\n", EIO);
-			exit(ERR_READ_FILE);
+		if((fread(&score_row.name, 1, sizeof(score_row.name), score_table)) == 0) {
+				fprintf(stderr, "error -> %d\n", EIO);
+				exit(ERR_READ_FILE);
 		}
-		if((fread(&score_row.point, 1, sizeof(score_row.point), score_table)) == 0){
-			fprintf(stderr, "error -> %d\n", EIO);
-			exit(ERR_READ_FILE);
+		if((fread(&score_row.point, 1, sizeof(score_row.point), score_table)) == 0) {
+				fprintf(stderr, "error -> %d\n", EIO);
+				exit(ERR_READ_FILE);
 		}
-		if((fread(&score_row.level, 1, sizeof(score_row.level), score_table)) == 0){
-			fprintf(stderr, "error -> %d\n", EIO);
-			exit(ERR_READ_FILE);
+		if((fread(&score_row.level, 1, sizeof(score_row.level), score_table)) == 0) {
+				fprintf(stderr, "error -> %d\n", EIO);
+				exit(ERR_READ_FILE);
 		}
 
 		fclose(score_table);
 
 		switch (dif) {
-			case EASY:
+		case EASY:
 				point = score_row.point / 75;
 				break;
-			case NORMAL:
+		case NORMAL:
 				point = score_row.point / 70;
 				break;
-			case HARD:
+		case HARD:
 				point = score_row.point / 65;
 				break;
-			case VERY_HARD:
+		case VERY_HARD:
 				point = score_row.point / 60;
 				break;
-			case HOPELESS:
+		case HOPELESS:
 				point = score_row.point / 10;
 				break;
 		}
 		return point;
-	}
+}
 
 
-	double max_score()
-	{
+double max_score()
+{
 		double point = 0, aux = 0;
 		char _homeEasy[1024], _homeNormal[1024], _homeHard[1024], _homeVeryHard[1024], _homeHopeless[1024];
 		strcpy(_homeEasy, getenv("HOME"));
@@ -192,47 +193,47 @@
 
 		point = normalice_high_score(_homeEasy, EASY);
 		if (point < (aux = normalice_high_score(_homeNormal, NORMAL))) {
-			point = aux;
+				point = aux;
 		}
 		if (point < (aux = normalice_high_score(_homeHard, HARD))) {
-			point = aux;
+				point = aux;
 		}
 		if (point < (aux = normalice_high_score(_homeVeryHard, VERY_HARD))) {
-			point = aux;
+				point = aux;
 		}
 		if (point < (aux = normalice_high_score(_homeHopeless, HOPELESS))) {
-			point = aux;
+				point = aux;
 		}
 
 		return point;
-	}
+}
 
 
-	short score_tab(char * _home, short actual_score_tab)
-	{
+short score_tab(char * _home, short actual_score_tab)
+{
 		FILE * score_table;
 		score imp_table[TB];
 
 		clear();
-		if((score_table = fopen(_home, "r+")) == NULL){
-			create_score_tab(_home);
+		if((score_table = fopen(_home, "r+")) == NULL) {
+				create_score_tab(_home);
 		} else {
-			fclose(score_table);
+				fclose(score_table);
 		}
 		read_score_table(_home, imp_table);
-		if((score_table = fopen(_home, "r+")) == NULL){
-			fprintf(stderr, "error -> %d\n", errno);
-			exit(ERR_OPEN_FILE);
+		if((score_table = fopen(_home, "r+")) == NULL) {
+				fprintf(stderr, "error -> %d\n", errno);
+				exit(ERR_OPEN_FILE);
 		}
 		printf_score_tab(imp_table, actual_score_tab);
 		fclose(score_table);
 
 		return 0;
-	}
+}
 
 
-	short is_high_score(int point, int level, int game_difficulty)
-	{
+short is_high_score(int point, int level, int game_difficulty)
+{
 		FILE * score_table;
 		score imp_table[TB];
 		char aux[1024], aux_name[1024];
@@ -243,89 +244,89 @@
 
 		strcpy(_home, getenv("HOME"));
 		strcat(_home, "/.bttConfig/btt");
-		switch(game_difficulty){
-			case EASY:
+		switch(game_difficulty) {
+		case EASY:
 				strcat(_home, "EasyScoreTab");
 				break;
-			case NORMAL:
+		case NORMAL:
 				strcat(_home, "NormalScoreTab");
 				break;
-			case HARD:
+		case HARD:
 				strcat(_home, "HardScoreTab");
 				break;
-			case VERY_HARD:
+		case VERY_HARD:
 				strcat(_home, "VeryHardScoreTab");
 				break;
-			case HOPELESS:
+		case HOPELESS:
 				strcat(_home, "HopelessScoreTab");
 				break;
 		}
 
-		if((score_table = fopen(_home, "r+")) == NULL){
-			create_score_tab(_home);
+		if((score_table = fopen(_home, "r+")) == NULL) {
+				create_score_tab(_home);
 		} else {
-			fclose(score_table);
+				fclose(score_table);
 		}
 
 		read_score_table(_home, imp_table);
 
 		aux[0] = ' ';
 
-		for(i = 0, j = 1; i < TB; i++){
-			if(point >= imp_table[i].point){
-				if(point == 0){
-					j = 8;
-					break;
-				}
-				pos = i;
-				printf("Congrats your score is the number %d of the list\n", i+1);
-				printf("Put your name [10 char]: <default: 'Stallman'>\n");
-				while(((c = getchar()) != 10) && (j < 10)){
-					aux[j++] = c;
-				}
-				aux[j]='\0';
+		for(i = 0, j = 1; i < TB; i++) {
+				if(point >= imp_table[i].point) {
+						if(point == 0) {
+								j = 8;
+								break;
+						}
+						pos = i;
+						printf("Congrats your score is the number %d of the list\n", i+1);
+						printf("Put your name [10 char]: <default: 'Stallman'>\n");
+						while(((c = getchar()) != 10) && (j < 10)) {
+								aux[j++] = c;
+						}
+						aux[j]='\0';
 
-				break;
-			}
+						break;
+				}
 		}
 
-		if(j == 1){
-			aux[1] = 'S';
-			aux[2] = 't';
-			aux[3] = 'a';
-			aux[4] = 'l';
-			aux[5] = 'l';
-			aux[6] = 'm';
-			aux[7] = 'a';
-			aux[8] = 'n';
-			aux[9] = '\0';
+		if(j == 1) {
+				aux[1] = 'S';
+				aux[2] = 't';
+				aux[3] = 'a';
+				aux[4] = 'l';
+				aux[5] = 'l';
+				aux[6] = 'm';
+				aux[7] = 'a';
+				aux[8] = 'n';
+				aux[9] = '\0';
 		}
 
 		c = kbhit();
-		if(c != 0){
-			c = kbhit();
+		if(c != 0) {
+				c = kbhit();
 		}
 
-		for(; pos < TB; pos++){
-			strcpy(aux_name, imp_table[pos].name);
-			aux_point = imp_table[pos].point;
-			aux_level = imp_table[pos].level;
-			strcpy(imp_table[pos].name, aux);
-			imp_table[pos].point = point;
-			imp_table[pos].level = level;
-			strcpy(aux, aux_name);
-			point = aux_point;
-			level = aux_level;
+		for(; pos < TB; pos++) {
+				strcpy(aux_name, imp_table[pos].name);
+				aux_point = imp_table[pos].point;
+				aux_level = imp_table[pos].level;
+				strcpy(imp_table[pos].name, aux);
+				imp_table[pos].point = point;
+				imp_table[pos].level = level;
+				strcpy(aux, aux_name);
+				point = aux_point;
+				level = aux_level;
 		}
 
-		if((score_table = fopen(_home, "r+")) == NULL){
-			fprintf(stderr, "error -> %d\n", errno);
-			exit(ERR_OPEN_FILE);
+		if((score_table = fopen(_home, "r+")) == NULL) {
+				fprintf(stderr, "error -> %d\n", errno);
+				exit(ERR_OPEN_FILE);
 		}
-		for(i = 0; i < TB; i++){
-			fwrite(&imp_table[i].name, sizeof(imp_table[i].name), 1, score_table);
-			fwrite(&imp_table[i].point, sizeof(imp_table[i].point), 1, score_table);
-			fwrite(&imp_table[i].level, sizeof(imp_table[i].level), 1, score_table);
+		for(i = 0; i < TB; i++) {
+				fwrite(&imp_table[i].name, sizeof(imp_table[i].name), 1, score_table);
+				fwrite(&imp_table[i].point, sizeof(imp_table[i].point), 1, score_table);
+				fwrite(&imp_table[i].level, sizeof(imp_table[i].level), 1, score_table);
 		}
 		fclose(score_table);
 		clear();
@@ -335,4 +336,4 @@
 		while((getch())!='\n');
 
 		return 0;
-	}
+}

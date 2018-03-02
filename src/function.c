@@ -27,44 +27,36 @@
 #include <fcntl.h>
 #include <string.h>
 #include <errno.h>
+#include <ctype.h>
 #include "include/error.h"
 #include "include/types.h"
 
 
-	short clear()
-	{
-		if((system("clear")) == -1){
-			fprintf(stderr, "error -> %d\n", errno);
-			exit(ERR_SYS);
+void clear()
+{
+		if((system("clear")) == -1)
+		{
+				fprintf(stderr, "error -> %d\n", errno);
+				exit(ERR_SYS);
 		}
+}
 
-		return 0;
-	}
-
-
-	short _nanosleep(int time)
-	{
-		/*
-			timespec struct is use for
-			every "sleep" time during
-			the game.
-		*/
-
+//  timespec struct is use for every "sleep" time during the game.
+void _nanosleep(int time)
+{
 		struct timespec ts;
-	  	ts.tv_sec = time / 1000;
-	  	ts.tv_nsec = (time % 1000) * 1000000;
+		ts.tv_sec = time / 1000;
+		ts.tv_nsec = (time % 1000) * 1000000;
 
-		if((nanosleep(&ts, NULL)) == -1){
-			fprintf(stderr, "error -> %d\n", errno);
-			exit(ERR_SYS);
+		if((nanosleep(&ts, NULL)) == -1)
+		{
+				fprintf(stderr, "error -> %d\n", errno);
+				exit(ERR_SYS);
 		}
+}
 
-		return 0;
-	}
-
-
-	short getch(void)
-	{
+short getch(void)
+{
 		struct termios oldattr, newattr;
 		short ch;
 		tcgetattr(1, &oldattr);
@@ -73,12 +65,11 @@
 		tcsetattr(1, TCSANOW, &newattr);
 		ch = getchar();
 		tcsetattr(1, TCSANOW, &oldattr);
-		return ch;
-	}
+		return tolower(ch);
+}
 
-
-	short kbhit(void)
-	{
+short kbhit(void)
+{
 		struct termios oldt, newt;
 		char ch[20];
 		short oldf;
@@ -90,69 +81,66 @@
 		oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
 		fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
 
-		if(!(scanf("%s", ch))){
-			fprintf(stderr, "error -> %d\n", EIO);
-			exit(ERR_READ_SCAN);
+		if(!(scanf("%s", ch))) {
+				fprintf(stderr, "error -> %d\n", EIO);
+				exit(ERR_READ_SCAN);
 		}
 
 		tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 		fcntl(STDIN_FILENO, F_SETFL, oldf);
 
-		if(ch[0] != EOF){
-			return ch[0];
+		if(ch[0] != EOF) {
+				return tolower(ch[0]);
 		}
 
 		return 0;
-	}
+}
 
-
-	short initialize_area(block * area)
-	{
-		short i;
+void initialize_area(block * area)
+{
 		area[0].c = '|';
 		area[0].pos = 0;
-		for(i = 1; i < A - 1; i++){
-			area[i].c = ' ';
-			area[i].pos = i;
+		for(int i = 1; i < A - 1; i++)
+		{
+				area[i].c = ' ';
+				area[i].pos = i;
 		}
 		area[A-1].c = '|';
 		area[A-1].pos = A - 1;
 		area[A].c = '\0';
 		area[A].pos = A;
-		return 0;
-	}
+}
 
-
-	short draw(block_arr area)
-	{
-		short i, j, top = A-1;
-		char ch;
+void draw(block_arr area)
+{
 		clear();
-		for(i = 0; i != L; i++)
+		for(int i = 0; i != AREA_HEIGHT; i++)
 		{
-			printf(MAGENTA "|" RESET);
-			for(j = 1; j != top; j++)
-			{
-				ch = area[i][j].c;
-				switch (ch)
+				printf(MAGENTA "|" RESET);
+				for(int j = 1; j != A-1; j++)
 				{
-					case ' ':
-						printf(" "); break;
-					case '#':
-						printf(GREEN "#"); break;
-					case '-':
-						printf(BLUE "-"); break;
-					case 'x':
-						printf(RED "X"); break;
-					default:
-						printf(CYAN "%c", ch); break;
+						switch (area[i][j].c)
+						{
+						case ' ':
+								printf(" ");
+								continue;
+						case '#':
+								printf(GREEN "#");
+								continue;
+						case '-':
+								printf(BLUE "-");
+								continue;
+						case 'x':
+								printf(RED "X");
+								continue;
+						default:
+								printf(CYAN "%c", area[i][j].c);
+						}
 				}
-			}
-			printf(MAGENTA "|\n" RESET);
+				printf(MAGENTA "|\n" RESET);
 		}
-		for(j = 0; j < A; j++){
-			printf(CYAN "‾" RESET);
+		for(int j = 0; j < A; j++)
+		{
+				printf(CYAN "‾" RESET);
 		}
-
-		return 0;
-	}
+}

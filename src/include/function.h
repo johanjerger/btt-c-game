@@ -2,16 +2,16 @@
 #define BTT_FUNC_H
 
 
-	short clear();
+void clear();
 
-	short _nanosleep(int);
+void _nanosleep(int);
 
-	short getch();
+short getch();
 
-	short kbhit();
+short kbhit();
 
-	short initialize_area(block *);
+void initialize_area(block *);
 
-	short draw(block_arr);
+void draw(block_arr);
 
 #endif

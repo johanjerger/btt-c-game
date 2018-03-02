@@ -4,14 +4,14 @@ TEMPORAL_FOLDER=tmp
 INSTALL_FOLDER=/usr/bin
 
 CFLAG=-O3 -Wall -std=gnu11 -pedantic -Wextra -Wcast-qual -Wwrite-strings -Wshadow
-# DEBUG=-g 
+# DEBUG=-g
 
 
 .PHONY: all clean folders install uninstall reinstall
-all: folders main.o $(TEMPORAL_FOLDER) $(BUILD_FOLDER)
+all: clean folders main.o $(TEMPORAL_FOLDER) $(BUILD_FOLDER)
 	    gcc $(TEMPORAL_FOLDER)/** -o $(BUILD_FOLDER)/btt $(CFLAG) $(DEBUG)
 
-main.o: 
+main.o:
 		gcc -c $(SOURCE_FOLDER)/main.c -o $(TEMPORAL_FOLDER)/main.o $(CFLAG) $(DEBUG)
 		gcc -c $(SOURCE_FOLDER)/btt.c -o $(TEMPORAL_FOLDER)/btt.o $(CFLAG) $(DEBUG)
 		gcc -c $(SOURCE_FOLDER)/function.c -o $(TEMPORAL_FOLDER)/function.o $(CFLAG) $(DEBUG)
@@ -23,7 +23,7 @@ main.o:
 		gcc -c $(SOURCE_FOLDER)/score_table.c -o $(TEMPORAL_FOLDER)/score_table.o $(CFLAG) $(DEBUG)
 		gcc -c $(SOURCE_FOLDER)/game_loop_function.c -o $(TEMPORAL_FOLDER)/game_loop_function.o $(CFLAG) $(DEBUG)
 
-clean: 
+clean:
 		rm -r $(TEMPORAL_FOLDER) $(BUILD_FOLDER)
 
 folders:

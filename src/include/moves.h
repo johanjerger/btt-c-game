@@ -1,12 +1,12 @@
 #ifndef BTT_MOV_H
 #define BTT_MOV_H
 
-	int move_shots(block *, bullet *, int *);
+void move_shots(block *, bullet *, int *);
 
-	int move_enem(block *, enemies *, int *);
+void move_enemies(block *, enemies *, int *);
 
-	int move_fireball(block *, fireball *, int *);
+void move_fireball(block *, fireball *, int *);
 
-	int jump(block_arr, int *, int, int, int);
+void jump(block_arr, int *, int, int, int);
 
 #endif

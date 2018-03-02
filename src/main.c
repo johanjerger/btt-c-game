@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <errno.h>
 #include "include/types.h"
 #include "include/error.h"
@@ -30,62 +31,44 @@
 #include "include/score_table.h"
 
 
-	int main()
-	{
-		int result;
-		int i, game_difficulty_level, end_level;
-		char player_char;
+int
+main (void)
+{
 		block_arr area;
 
-	  	/*
-	  		We initialice every single level
-	  		of the matrix area.
-	  	*/
-
-		for(i=0; i < L; i++){
-			initialize_area(area[i]);
+		//   We initialice every single level of the matrix area.
+		for(int i=0; i != AREA_HEIGHT; i++)
+		{
+				initialize_area(area[i]);
 		}
 
 		// The "menu loop" start...
+		while(true)
+		{
+				int end_level = 1, result = 0;
+				int game_difficulty_level = menu();
+				char player_char = select_player();
 
-		do{
-			game_difficulty_level = menu();
+				// The game function start the party
+				result = game(area, &game_difficulty_level, &end_level, player_char);
 
-			
-			end_level = 1;
-			result = 0;
+				// This block only show the end result of the party
+				clear();
+				printf(RED "\t\t\tGAME OVER!\n" RESET "\t\t\tScore: %d\n\n", result);
+				printf("\n\t\t\tpress " GREEN "ENTER" RESET "\n");
 
-			player_char = select_player();
+				// await for an Enter
+				while((getch())!='\n');
 
-			// The game function start the party
+				// Evaluate if the result deserves be a High Score
+				is_high_score(result, end_level, game_difficulty_level);
 
-			result = game(area, &game_difficulty_level, &end_level, player_char);
-
-			clear();
-
-			// This block only show the end result of the party
-
-			if(result > 15000){
-				printf(RED "\t\t\tGAME OVER!\n" RESET "\t\t\tScore: %d  :D\n\n", result);
-			} else if (result > 10000){
-				printf(RED "\t\t\tGAME OVER!\n" RESET "\t\t\tScore: %d  :)\n\n", result);
-			} else if(result > 5000){
-				printf(RED "\t\t\tGAME OVER!\n" RESET "\t\t\tScore: %d  :|\n\n", result);
-			} else {
-				printf(RED "\t\t\tGAME OVER!\n" RESET "\t\t\tScore: %d  :(\n\n", result);
-			}
-			printf("\n\t\t\tpress " GREEN "ENTER" RESET "\n");
-			while((getch())!='\n');
-			is_high_score(result, end_level, game_difficulty_level);
-
-			// We clean the area for another game.
-
-			for(i=0; i < L; i++){
-				initialize_area(area[i]);
-			}
-			
-
-		} while(1);
+				// We clean the area for another game.
+				for(int i=0; i != AREA_HEIGHT; i++)
+				{
+						initialize_area(area[i]);
+				}
+		}
 
 		return 0;
-	}
+}

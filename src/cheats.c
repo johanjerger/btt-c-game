@@ -18,36 +18,22 @@
 *    along with btt.  If not, see <http://www.gnu.org/licenses/>.
 *
 ***************************************************************************/
-
 #include "include/types.h"
 
-
-	int cheat_one(block * area, int * cnt_enem, int * cnt_shots, int act, char pj)
-  	{
-		int i;
-
+void cheat_one(block * area, int * cnt_enem, int * cnt_shots, int act, char pj)
+{
 		*cnt_enem = 0;
 		*cnt_shots = 0;
-
-		for(i = 1; i < A - 1; i++){
-			area[i].c = ' ';
-		}
+		for(int i = 1; i != A - 1; i++) area[i].c = ' ';
 		area[act].c = pj;
-
-		return 0;
-	}
+}
 
 
-	int cheat_two(block * area, fireball * ball, int act, int der)
-  	{
+void cheat_two(block * area, fireball * ball, int act, int der)
+{
 		ball->is_imp = 0;
 		ball->mod = 0;
-		if(der){
-			ball->pos = act+1;
-		} else{
-			ball->pos = act-1;
-		}
+		ball->pos = (der) ? act + 1 : act - 1;
 		ball->der = der;
 		area[ball->pos].c = 'x';
-		return 0;
-	}
+}

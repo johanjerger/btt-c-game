@@ -18,160 +18,128 @@
 *    along with btt.  If not, see <http://www.gnu.org/licenses/>.
 *
 ***************************************************************************/
-
 #include "include/types.h"
 
+void delete_shot(bullet * shots, int * cnt_shots, int position)
+{
+		for(int j = position; j < *cnt_shots; j++)
+		{
+				shots[j].pos = shots[j+1].pos;
+				shots[j].der = shots[j+1].der;
+		}
+		(*cnt_shots)--;
+}
 
-	int move_shots(block * area, bullet * shots, int * cnt_shots)
-	{
-		int i, j, k = 0;
+void move_shots(block * area, bullet * shots, int * cnt_shots)
+{
+		int k = 0, cmp_value;
 
-		for(i = 0; i < *cnt_shots; i++){
-			if(shots[k].der){
+		for(int i = 0; i != *cnt_shots; i++)
+		{
 				area[shots[k].pos].c = ' ';
-				shots[k].pos++;
-				if(shots[k].pos < A - 1){
-						area[shots[k].pos].c = '-';
-						k++;
+				if(shots[k].der) {
+						shots[k].pos++;
+						cmp_value = A - 1;
 				} else {
-					for(j = k; j < *cnt_shots; j++){
-						shots[j].pos = shots[j+1].pos;
-						shots[j].der = shots[j+1].der;
-					}
-					(*cnt_shots)--;
+						shots[k].pos--;
+						cmp_value = 0;
 				}
-			} else {
-				area[shots[k].pos].c = ' ';
-				shots[k].pos--;
-				if(shots[k].pos > 0){
-					area[shots[k].pos].c = '-';
-					k++;
-				} else {
-					for(j = k; j < *cnt_shots; j++){
-						shots[j].pos = shots[j+1].pos;
-						shots[j].der = shots[j+1].der;
-					}
-					k = i;
-					(*cnt_shots)--;
-				}
-			}
+				if(shots[k].pos != cmp_value) area[shots[k++].pos].c = '-';
+				else delete_shot(shots, cnt_shots, k);
 		}
+}
 
-		return 0;
-	}
+void delete_enemy(enemies * enem, int * cnt_enem, int position)
+{
+		for(int j = position; j < *cnt_enem; j++)
+		{
+				enem[j].pos = enem[j+1].pos;
+				enem[j].der = enem[j+1].der;
+		}
+		(*cnt_enem)--;
+}
 
+void move_enemies(block * area, enemies * enem, int * cnt_enem)
+{
+		int k = 0, cmp_value;
 
-	int move_enem(block * area, enemies * enem, int * cnt_enem)
-	{
-		int i, j, k = 0;
-
-		for(i = 0; i < *cnt_enem; i++){
-			if(enem[k].der){
+		for(int i = 0; i < *cnt_enem; i++)
+		{
 				area[enem[k].pos].c = ' ';
-				enem[k].pos++;
-				if(enem[k].pos < A - 1){
-					area[enem[k].pos].c = '#';
-					k++;
+				if(enem[k].der) {
+						enem[k].pos++;
+						cmp_value = A - 1;
 				} else {
-					for(j = k; j < *cnt_enem; j++){
-						enem[j].pos = enem[j+1].pos;
-						enem[j].der = enem[j+1].der;
-					}
-					k = i;
-					(*cnt_enem)--;
+						enem[k].pos--;
+						cmp_value = 0;
 				}
-			} else {
-				area[enem[k].pos].c = ' ';
-				enem[k].pos--;
-				if(enem[k].pos > 0){
-					area[enem[k].pos].c = '#';
-					k++;
-				} else {
-					for(j = k; j < *cnt_enem; j++){
-						enem[j].pos = enem[j+1].pos;
-						enem[j].der = enem[j+1].der;
-					}
-					k = i;
-					(*cnt_enem)--;
-				}
-			}
+				if(enem[k].pos != cmp_value) area[enem[k++].pos].c = '#';
+				else delete_enemy(enem, cnt_enem, k);
 		}
+}
 
-		return 0;
-	}
-
-
-	int move_fireball(block * area, fireball * ball, int * is_fireball)
-	{
-		if(!ball->is_imp){
-			if(ball->der){
+void move_fireball(block * area, fireball * ball, int * is_fireball)
+{
+		if(!ball->is_imp) {
+				int cmp_value;
 				area[ball->pos].c = ' ';
-				ball->pos++;
-				if(ball->pos < A - 2){
-						area[ball->pos].c = 'x';
+
+				if(ball->der) {
+						ball->pos++;
+						cmp_value = A - 2;
 				} else {
-					*is_fireball = 0;
+						ball->pos--;
+						cmp_value = 1;
 				}
-			} else {
-				area[ball->pos].c = ' ';
-				ball->pos--;
-				if(ball->pos > 1){
-					area[ball->pos].c = 'x';
-				} else {
-					*is_fireball = 0;
-				}
-			}
+
+				if(ball->pos != cmp_value) area[ball->pos].c = 'x';
+				else *is_fireball = 0;
 		}
+}
 
-		return *is_fireball;
-	}
-
-
-	int jump(block_arr area, int * act, int der, int pj, int mod)
-	{
-		if(mod == 0){
-			if(der){
-				if(area[1][*act].pos != A - 2){
-					area[1][(*act)++].c = ' ';
-					area[0][*act].c = pj;
+void jump(block_arr area, int * act, int der, int pj, int mod)
+{
+		int cmp_value, movement;
+		switch (mod) {
+		case 0:
+				cmp_value = (der) ? A - 2 : 1;
+				movement = (der) ? 1 : -1;
+				if (area[1][*act].pos != cmp_value)
+				{
+						area[1][*act].c = ' ';
+						*act += movement;
+						area[0][*act].c = pj;
 				}
-			} else {
-				if(area[1][*act].pos != 1){
-					area[1][(*act)--].c = ' ';
-					area[0][*act].c = pj;
+				break;
+		case 1:
+				cmp_value = (der) ? A - 2 : 1;
+				movement = (der) ? 1 : -1;
+				if (area[0][*act].pos != cmp_value)
+				{
+						area[0][*act].c = ' ';
+						*act += movement;
+						area[0][*act].c = pj;
 				}
-			}
-		} else if(mod == 1){
-			if(der){
-				if(area[0][*act].pos != A - 2){
-					area[0][(*act)++].c = ' ';
-					area[0][*act].c = pj;
+				break;
+		case 2:
+				cmp_value = (der) ? A - 2 : 1;
+				movement = (der) ? 1 : 0;
+				if (area[1][*act].pos != cmp_value)
+				{
+						area[0][*act].c = ' ';
+						*act += movement;
+						area[1][*act].c = pj;
 				}
-			} else {
-				if(area[0][*act].pos != 1){
-					area[0][(*act)--].c = ' ';
-					area[0][*act].c = pj;
+				break;
+		default:
+				cmp_value = (der) ? A - 2 : 1;
+				movement = (der) ? -1 : 0;
+				if (area[1][*act].pos != cmp_value)
+				{
+						area[0][*act].c = ' ';
+						*act += movement;
+						area[1][*act].c = pj;
 				}
-			}
-		} else if(mod == 2){
-			if(der){
-				if(area[1][*act].pos != A - 2){
-					area[0][(*act)++].c = ' ';
-					area[1][*act].c = pj;
-				} else {
-					area[0][*act].c = ' ';
-					area[1][*act].c = pj;
-				}
-			} else {
-				if(area[1][*act].pos != 1){
-					area[0][(*act)--].c = ' ';
-					area[1][*act].c = pj;
-				} else {
-					area[0][*act].c = ' ';
-					area[1][*act].c = pj;
-				}
-			}
+				break;
 		}
-
-		return 0;
-	}
+}

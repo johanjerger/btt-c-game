@@ -1,6 +1,6 @@
 /***************************************************************************
 *
-*				 «©Copyright 2016 Juan Cruz Ocampos»
+*				 «©Copyright 2016-2018 Juan Cruz Ocampos»
 *
 *	 This file is part of btt.
 *
@@ -22,88 +22,65 @@
 
 void delete_shot(bullet * shots, int * cnt_shots, int position)
 {
-		for(int j = position; j < *cnt_shots; j++)
+		for (int i = position; i < *cnt_shots; i++)
 		{
-				shots[j].pos = shots[j+1].pos;
-				shots[j].der = shots[j+1].der;
+				shots[i].pos = shots[i+1].pos;
+				shots[i].der = shots[i+1].der;
 		}
 		(*cnt_shots)--;
 }
 
 void move_shots(block * area, bullet * shots, int * cnt_shots)
 {
-		int k = 0, cmp_value;
-
-		for(int i = 0; i != *cnt_shots; i++)
+		for (int i = 0; i != *cnt_shots; i++)
 		{
-				area[shots[k].pos].c = ' ';
-				if(shots[k].der) {
-						shots[k].pos++;
-						cmp_value = A - 1;
-				} else {
-						shots[k].pos--;
-						cmp_value = 0;
-				}
-				if(shots[k].pos != cmp_value) area[shots[k++].pos].c = '-';
-				else delete_shot(shots, cnt_shots, k);
+				area[shots[i].pos].c = ' ';
+				shots[i].pos += (shots[i].der) ? 1 : -1;
+				int cmp_value = (shots[i].der) ? A - 1 : 0;
+				if (shots[i].pos != cmp_value) area[shots[i].pos].c = '-';
+				else delete_shot(shots, cnt_shots, i--);
 		}
 }
 
-void delete_enemy(enemies * enem, int * cnt_enem, int position)
+void delete_enemy(enemies * enem, int * cnt_enemies, int position)
 {
-		for(int j = position; j < *cnt_enem; j++)
+		for (int i = position; i < *cnt_enemies; i++)
 		{
-				enem[j].pos = enem[j+1].pos;
-				enem[j].der = enem[j+1].der;
+				enem[i].pos = enem[i+1].pos;
+				enem[i].der = enem[i+1].der;
 		}
-		(*cnt_enem)--;
+		(*cnt_enemies)--;
 }
 
-void move_enemies(block * area, enemies * enem, int * cnt_enem)
+void move_enemies(block * area, enemies * enem, int * cnt_enemies)
 {
-		int k = 0, cmp_value;
-
-		for(int i = 0; i < *cnt_enem; i++)
+		for (int i = 0; i < *cnt_enemies; i++)
 		{
-				area[enem[k].pos].c = ' ';
-				if(enem[k].der) {
-						enem[k].pos++;
-						cmp_value = A - 1;
-				} else {
-						enem[k].pos--;
-						cmp_value = 0;
-				}
-				if(enem[k].pos != cmp_value) area[enem[k++].pos].c = '#';
-				else delete_enemy(enem, cnt_enem, k);
+				area[enem[i].pos].c = ' ';
+				enem[i].pos += (enem[i].der) ? 1 : -1;
+				int cmp_value = (enem[i].der) ? A - 1 : 0;
+				if (enem[i].pos != cmp_value) area[enem[i].pos].c = '#';
+				else delete_enemy(enem, cnt_enemies, i--);
 		}
 }
 
 void move_fireball(block * area, fireball * ball, int * is_fireball)
 {
-		if(!ball->is_imp) {
-				int cmp_value;
-				area[ball->pos].c = ' ';
-
-				if(ball->der) {
-						ball->pos++;
-						cmp_value = A - 2;
-				} else {
-						ball->pos--;
-						cmp_value = 1;
-				}
-
-				if(ball->pos != cmp_value) area[ball->pos].c = 'x';
-				else *is_fireball = 0;
-		}
+		area[ball->pos].c = ' ';
+		ball->pos += (ball->der) ? 1 : -1;
+		int cmp_value = (ball->der) ? A - 2 : 1;
+		if (ball->pos != cmp_value) area[ball->pos].c = 'x';
+		else *is_fireball = 0;
 }
 
 void jump(block_arr area, int * act, int der, int pj, int mod)
 {
 		int cmp_value, movement;
-		switch (mod) {
+		cmp_value = (der) ? A - 2 : 1;
+		movement = (der) ? 1 : -1;
+		switch (mod)
+		{
 		case 0:
-				cmp_value = (der) ? A - 2 : 1;
-				movement = (der) ? 1 : -1;
 				if (area[1][*act].pos != cmp_value)
 				{
 						area[1][*act].c = ' ';
@@ -112,8 +89,6 @@ void jump(block_arr area, int * act, int der, int pj, int mod)
 				}
 				break;
 		case 1:
-				cmp_value = (der) ? A - 2 : 1;
-				movement = (der) ? 1 : -1;
 				if (area[0][*act].pos != cmp_value)
 				{
 						area[0][*act].c = ' ';
@@ -122,24 +97,14 @@ void jump(block_arr area, int * act, int der, int pj, int mod)
 				}
 				break;
 		case 2:
-				cmp_value = (der) ? A - 2 : 1;
-				movement = (der) ? 1 : 0;
 				if (area[1][*act].pos != cmp_value)
 				{
 						area[0][*act].c = ' ';
 						*act += movement;
 						area[1][*act].c = pj;
-				}
-				break;
-		default:
-				cmp_value = (der) ? A - 2 : 1;
-				movement = (der) ? -1 : 0;
-				if (area[1][*act].pos != cmp_value)
-				{
+				} else {
 						area[0][*act].c = ' ';
-						*act += movement;
 						area[1][*act].c = pj;
 				}
-				break;
 		}
 }

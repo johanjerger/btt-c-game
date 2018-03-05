@@ -100,7 +100,7 @@ void initialize_area(block * area)
 {
 		area[0].c = '|';
 		area[0].pos = 0;
-		for(int i = 1; i < A - 1; i++)
+		for(int i = 1; i != A - 1; i++)
 		{
 				area[i].c = ' ';
 				area[i].pos = i;
@@ -123,24 +123,21 @@ void draw(block_arr area)
 						{
 						case ' ':
 								printf(" ");
-								continue;
+								break;
 						case '#':
 								printf(GREEN "#");
-								continue;
+								break;
 						case '-':
 								printf(BLUE "-");
-								continue;
+								break;
 						case 'x':
 								printf(RED "X");
-								continue;
+								break;
 						default:
 								printf(CYAN "%c", area[i][j].c);
 						}
 				}
 				printf(MAGENTA "|\n" RESET);
 		}
-		for(int j = 0; j < A; j++)
-		{
-				printf(CYAN "‾" RESET);
-		}
+		for(int j = 0; j < A; j++) printf(CYAN "‾" RESET);
 }

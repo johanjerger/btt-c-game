@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
 #include "include/types.h"
@@ -190,7 +191,7 @@ short score_tab_menu(int * actual_score_tab_option, int * actual_score_tab)
 }
 
 
-short pause_messege(int index, short * quit)
+bool pause_messege(int index)
 {
 		printf_menu();
 		printf("\n\t\t\t\t" BLUE "   PAUSE" RESET "\n\n");
@@ -205,13 +206,10 @@ short pause_messege(int index, short * quit)
 		footbar_menu();
 		int c = 0;
 		while (c != 10 && c != 's' && c != 'w') c = getch();
-		if (c == 10) {
-				if (index == QUIT) *quit = 1;
-				return 0;
-		}
+		if (c == 10) return (index == QUIT) ? true : false;
 		cmp_action(&index, RESUME, QUIT, c, 's', 'w');
 
-		return pause_messege(index, quit);
+		return pause_messege(index);
 }
 
 

@@ -18,9 +18,11 @@
 *    along with btt.  If not, see <http://www.gnu.org/licenses/>.
 *
 ***************************************************************************/
+#include <stdbool.h>
 #include "include/types.h"
 
-void cheat_one(block * area, int * cnt_enem, int * cnt_shots, int act, char pj)
+void
+cheat_one(block * area, int * cnt_enem, int * cnt_shots, int act, char pj)
 {
 		*cnt_enem = 0;
 		*cnt_shots = 0;
@@ -29,9 +31,10 @@ void cheat_one(block * area, int * cnt_enem, int * cnt_shots, int act, char pj)
 }
 
 
-void cheat_two(block * area, fireball * ball, int act, int der)
+void
+cheat_two(block * area, fireball * ball, int act, int der)
 {
-		ball->is_imp = 0;
+		ball->is_imp = false;
 		ball->mod = 0;
 		ball->pos = (der) ? act + 1 : act - 1;
 		ball->der = der;

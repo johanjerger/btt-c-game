@@ -1,9 +1,11 @@
 #ifndef BTT_MENU_H
 #define BTT_MENU_H
 
+#include <stdbool.h>
+
 short printf_menu();
 
-short pause_messege(short, short *);
+bool pause_messege(short);
 
 short main_menu(short);
 

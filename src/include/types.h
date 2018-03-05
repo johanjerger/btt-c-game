@@ -3,9 +3,9 @@
 
 	#define A 80   // Area length.
 	#define AREA_HEIGHT 10
-	#define C 10   // Shot max quantity per array "level".
+	#define MAX_SHOTS_PER_ROW 10   // Shot max quantity per array "level".
 	#define MT 20   // Mounster time appearance.
-	#define MC 15   // Mounster quantity per array "level".
+	#define MC 10   // Mounster quantity per array "level".
 	#define TB 10   // Size of score table.
 	#define CH 6   // Cheats string length.
 	#define VERSION "1.5" // Acual version.

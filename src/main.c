@@ -36,21 +36,16 @@ main (void)
 {
 		block_arr area;
 
-		//   We initialice every single level of the matrix area.
-		for(int i=0; i != AREA_HEIGHT; i++)
-		{
-				initialize_area(area[i]);
-		}
+		for (int i=0; i != AREA_HEIGHT; i++) initialize_area(area[i]);
 
-		// The "menu loop" start...
 		while(true)
 		{
 				int end_level = 1, result = 0;
-				int game_difficulty_level = menu();
+				int difficult = menu();
 				char player_char = select_player();
 
 				// The game function start the party
-				result = game(area, &game_difficulty_level, &end_level, player_char);
+				result = game(area, difficult, &end_level, player_char);
 
 				// This block only show the end result of the party
 				clear();
@@ -61,14 +56,9 @@ main (void)
 				while((getch())!='\n');
 
 				// Evaluate if the result deserves be a High Score
-				is_high_score(result, end_level, game_difficulty_level);
+				is_high_score(result, end_level, difficult);
 
 				// We clean the area for another game.
-				for(int i=0; i != AREA_HEIGHT; i++)
-				{
-						initialize_area(area[i]);
-				}
+				for(int i=0; i != AREA_HEIGHT; i++) initialize_area(area[i]);
 		}
-
-		return 0;
 }

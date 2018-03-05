@@ -61,42 +61,32 @@ static void read_score_table(char * _home, score * imp_table)
 }
 
 
-static void printf_score_tab(score * imp_table, short actual_score_tab)
+static void printf_score_tab(score * imp_table, short actual_table)
 {
-		short i;
+		const char * table_names[] =  {
+				"EASY",
+				"NORMAL",
+				"HARD",
+				"VERY HARD",
+				"HOPELESS"
+		};
 
-		switch(actual_score_tab) {
-		case EASY:
-				printf(BLUE "\t\t\tEASY SCORE TAB\n\n" RESET);
-				break;
-		case NORMAL:
-				printf(BLUE "\t\t\tNORMAL SCORE TAB\n\n" RESET);
-				break;
-		case HARD:
-				printf(BLUE "\t\t\tHARD SCORE TAB\n\n" RESET);
-				break;
-		case VERY_HARD:
-				printf(BLUE "\t\t\tVERY HARD SCORE TAB\n\n" RESET);
-				break;
-		case HOPELESS:
-				printf(BLUE "\t\t\tHOPELESS SCORE TAB\n\n" RESET);
-				break;
-		}
+		printf(BLUE "\t\t\t%s SCORE TAB\n\n" RESET, table_names[actual_table]);
 
-		printf(YELLOW "%-10s" BLUE "     ---     " YELLOW "%-10s" BLUE "     ---     " YELLOW "%-10s\n" RESET, " name", " score", " level");
-		for(i = 0; i < TB; i++) {
-				printf("%-10s     " BLUE "---" RESET "     %10d     " BLUE "---" RESET "     %10d     \n" RESET, imp_table[i].name, imp_table[i].point, imp_table[i].level);
-		}
+		printf(YELLOW " %-9s" BLUE "     ---     " YELLOW " %-9s" BLUE
+		       "     ---     " YELLOW " %-9s\n" RESET, "name", "score", "level");
+		for(int i = 0; i != TB; i++)
+				printf("%-10s     " BLUE "---" RESET "     %10d     " BLUE "---" RESET
+				       "     %10d     \n" RESET, imp_table[i].name, imp_table[i].point,
+				       imp_table[i].level);
 }
 
 
-short create_score_tab(char * _home)
+void create_score_tab(char * _home)
 {
 		FILE * score_table;
 		char _homeBox[1024];
 		score score_row;
-		short i;
-
 
 		strcpy(_homeBox, getenv("HOME"));
 		strcat(_homeBox, "/.bttConfig");
@@ -108,12 +98,12 @@ short create_score_tab(char * _home)
 				}
 		}
 
-
 		if((score_table = fopen(_home, "w+")) == NULL) {
 				fprintf(stderr, "error -> %d\n", errno);
 				exit(ERR_CREATING_FILE);
 		}
-		for(i = 0; i < TB; i++) {
+		for(int i = 0; i != TB; i++)
+		{
 				strcpy(score_row.name, " ----- ");
 				score_row.point = 0;
 				score_row.level = 1;
@@ -122,15 +112,12 @@ short create_score_tab(char * _home)
 				fwrite(&score_row.level, sizeof(score_row.level), 1, score_table);
 		}
 		fclose(score_table);
-
-		return 0;
 }
 
 
 static double normalice_high_score(char * _home, int dif)
 {
 		FILE * score_table;
-		double point = 0;
 		score score_row;
 
 		if((score_table = fopen(_home, "r+")) == NULL) {
@@ -155,24 +142,8 @@ static double normalice_high_score(char * _home, int dif)
 
 		fclose(score_table);
 
-		switch (dif) {
-		case EASY:
-				point = score_row.point / 75;
-				break;
-		case NORMAL:
-				point = score_row.point / 70;
-				break;
-		case HARD:
-				point = score_row.point / 65;
-				break;
-		case VERY_HARD:
-				point = score_row.point / 60;
-				break;
-		case HOPELESS:
-				point = score_row.point / 10;
-				break;
-		}
-		return point;
+		int normalicers[] = {75, 70, 65, 60, 10};
+		return score_row.point / normalicers[dif];;
 }
 
 

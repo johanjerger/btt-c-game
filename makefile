@@ -24,7 +24,7 @@ main.o:
 		gcc -c $(SOURCE_FOLDER)/game_loop_function.c -o $(TEMPORAL_FOLDER)/game_loop_function.o $(CFLAG) $(DEBUG)
 
 clean:
-		rm -r $(TEMPORAL_FOLDER) $(BUILD_FOLDER)
+		-rm -r $(TEMPORAL_FOLDER) $(BUILD_FOLDER)
 
 folders:
 		-mkdir $(TEMPORAL_FOLDER) $(BUILD_FOLDER)

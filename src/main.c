@@ -35,25 +35,22 @@
 int
 main (void)
 {
-		srand(time(NULL)); // random seeds
+		// random seeds
+		srand(time(NULL));
 		while(true)
 		{
 				int difficult = menu();
 				int end_level = 1;
 				char player_char = select_player();
 
-				// The game function start the party
 				int result = game(difficult, &end_level, player_char);
 
-				// This block only show the end result of the party
 				clear();
 				printf(RED "\t\t\tGAME OVER!\n" RESET "\t\t\tScore: %d\n\n", result);
 				printf("\n\t\t\tpress " GREEN "ENTER" RESET "\n");
 
 				// await for an Enter
 				while((getch())!='\n');
-
-				// Evaluate if the result deserves be a High Score
 				is_high_score(result, end_level, difficult);
 		}
 }

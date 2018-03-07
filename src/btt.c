@@ -42,7 +42,8 @@ int
 game (int difficult, int * level, char player_char)
 {
 		short key;
-		int position = A/2, row = 1; // Player position
+		// Player position
+		int position = A/2, row = 1;
 		int cnt_shots[AREA_HEIGHT], cnt_enemies[AREA_HEIGHT];
 		int points = 0, num = 5;
 		int handicap = 0, direction = 0;
@@ -66,7 +67,8 @@ game (int difficult, int * level, char player_char)
 
 		// Some variables in base of the selected difficult for the game.
 		int difficult_shots_penalties[] = {0, 2, 4, 6, 10};
-		int enemies_numbers[] = {1, 5, 10, 15, 8};                             // I dont know what it is :/
+		// I dont know what it is :/
+		int enemies_numbers[] = {1, 5, 10, 15, 8};
 
 		int difficult_shots_penalty = difficult_shots_penalties[difficult];
 		int enem_number = enemies_numbers[difficult];
@@ -172,7 +174,7 @@ game (int difficult, int * level, char player_char)
 						move_operations(area[i], shots[i], enem[i], &ball, &(cnt_shots[i]), &(cnt_enemies[i]), &is_fb, i);
 
 						generate_enemies_control(area[i], enem[i], &(cnt_enemies[i]), &num,
-																		 &time, level, enem_number, &time_sleep, area);
+						                         &time, level, enem_number, &time_sleep, area);
 
 						points += verify_shots(area[i], enem[i], shots[i], &(cnt_enemies[i]), &(cnt_shots[i]));
 						fireball_control(&is_fb, i, &points, area, enem, &ball, cnt_enemies);

@@ -26,18 +26,18 @@
 
 int enemies_per_level = 100;
 
-void generate_enemies(block * area, enemies * enem, int * cnt_enem,
-                     int * num, int * time,
-                     int * level, int enemy_num, int * time_sleep)
+void
+generate_enemies(block * area, enemies * enem, int * cnt_enem, int * num,
+                 int * time, int * level, int enemy_num, int * time_sleep)
 {
 		if(!*num) {
 				//num = rand() % (n - m + 1) + m   ---  [M, N]
 				*num = rand() % (MT - enemy_num) + 1;
-				if(*cnt_enem < MC) {
+				if (*cnt_enem != MC) {
 						int side = rand() % (21) - 10;
 						enem[*cnt_enem].pos = (side >= 0) ? 1 : A - 2;
 						enem[*cnt_enem].der = (side >= 0) ? 1 : 0;
-            area[enem[(*cnt_enem)++].pos].c = '#';
+						area[enem[(*cnt_enem)++].pos].c = '#';
 						enemies_per_level--;
 						if(!enemies_per_level) {
 								*time -= 15;
@@ -50,15 +50,16 @@ void generate_enemies(block * area, enemies * enem, int * cnt_enem,
 }
 
 
-void generate_shots(block * area, int * cnt_shots, bullet * shots,
-                   int act, int handicap, int der)
+void
+generate_shots(block * area, int * cnt_shots, bullet * shots, int act,
+               int handicap, int der)
 {
-    int movement = (der) ? 1 : -1;
+		int movement = (der) ? 1 : -1;
 		if(area[act + movement].c != '-') {
 				if(*cnt_shots < handicap) {
 						shots[*cnt_shots].der = der;
-            shots[*cnt_shots].pos = act + movement;
-            area[shots[(*cnt_shots)++].pos].c = '-';
+						shots[*cnt_shots].pos = act + movement;
+						area[shots[(*cnt_shots)++].pos].c = '-';
 				}
 		}
 }

@@ -118,23 +118,21 @@ short start_game_menu(int index)
 {
 		printf_menu();
 		printf("\t\t\t\tSelect Difficulty\n\n");
-		switch(index) {
-		case EASY:
-				printf(YELLOW "\t\t\t\t Easy " RESET "\n\t\t\t\t Normal \n\t\t\t\t Hard \n\t\t\t\t Very hard \n\t\t\t\t Hopeless \n\n");
-				break;
-		case NORMAL:
-				printf("\t\t\t\t Easy \n\t\t\t\t" YELLOW " Normal " RESET "\n\t\t\t\t Hard \n\t\t\t\t Very hard \n\t\t\t\t Hopeless \n\n");
-				break;
-		case HARD:
-				printf("\t\t\t\t Easy \n\t\t\t\t Normal \n\t\t\t\t" YELLOW " Hard " RESET "\n\t\t\t\t Very hard \n\t\t\t\t Hopeless \n\n");
-				break;
-		case VERY_HARD:
-				printf("\t\t\t\t Easy \n\t\t\t\t Normal \n\t\t\t\t Hard \n\t\t\t\t" YELLOW " Very hard \n\t\t\t\t" RESET " Hopeless \n\n");
-				break;
-		case HOPELESS:
-				printf("\t\t\t\t Easy \n\t\t\t\t Normal \n\t\t\t\t Hard \n\t\t\t\t Very hard \n\t\t\t\t" YELLOW " Hopeless \n\n" RESET );
-				break;
+		const char * difficults[] = {
+			"Easy",
+			"Normal",
+			"Hard",
+			"Very Hard",
+			"Hopeless"
+		};
+		for (int i = 0; i < 5; i++)
+		{
+				if (i == index)
+						printf(YELLOW "\t\t\t\t %s \n" RESET, difficults[i]);
+				else
+						printf("\t\t\t\t %s \n", difficults[i]);
 		}
+		printf("\n\n");
 		footbar_menu();
 		int c = 0;
 		while ( c != 10 && c != 's' && c != 'w') c = getch();
@@ -290,17 +288,15 @@ short select_player_menu(int index)
 {
 		printf_menu();
 		printf("\t\t\t\tSelect a Player\n\n");
-		switch(index) {
-		case FIRST:
-				printf(YELLOW "\t\t\t\t     * " RESET "\n\t\t\t\t     ~ \n\t\t\t\t     + \n\n\n\n");
-				break;
-		case SECOND:
-				printf("\t\t\t\t     * \n\t\t\t\t" YELLOW "     ~ " RESET "\n\t\t\t\t     + \n\n\n\n");
-				break;
-		case THIRD:
-				printf("\t\t\t\t     * \n\t\t\t\t     ~ \n\t\t\t\t" YELLOW "     + " RESET "\n\n\n\n");
-				break;
+		char players[] = {'*', '~', '+'};
+		for (int i = 0; i < 3; i++)
+		{
+			if (i == index)
+			 	printf(YELLOW "\t\t\t\t     %c \n" RESET, players[i]);
+			else
+				printf("\t\t\t\t     %c \n", players[i]);
 		}
+		printf("\n\n\n");
 		footbar_menu();
 
 		int c = 0;
@@ -321,4 +317,9 @@ short menu()
 short select_player()
 {
 		return select_player_menu(FIRST);
+}
+
+bool pause_game()
+{
+		return pause_messege(RESUME);
 }

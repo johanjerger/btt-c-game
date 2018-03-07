@@ -5,8 +5,6 @@
 
 short printf_menu();
 
-bool pause_messege(short);
-
 short main_menu(short);
 
 short select_player_menu(short);
@@ -14,5 +12,7 @@ short select_player_menu(short);
 short menu();
 
 short select_player();
+
+int pause_game();
 
 #endif

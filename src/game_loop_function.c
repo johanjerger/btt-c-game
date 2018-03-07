@@ -18,7 +18,6 @@
 *    along with btt.  If not, see <http://www.gnu.org/licenses/>.
 *
 ***************************************************************************/
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -30,11 +29,11 @@
 #include "include/verify.h"
 
 void
-printf_footbar(int handicap, int * cnt_shots, int row, int total_score, int * level)
+printf_footbar(int handicap, int * cnt_shots, int row, int points, int * level)
 {
 		printf("\n\n\t" BLUE "Remaining shots:" RESET " %d\t\t\t" BLUE "Points:"
 		       RESET " %d\n\t\t\t\t\t\t" BLUE "Level:" RESET " %d\n" RESET,
-		       handicap - cnt_shots[row], total_score, *level);
+		       handicap - cnt_shots[row], points, *level);
 }
 
 void
@@ -70,7 +69,7 @@ move_operations(block * area, bullet * shots, enemies * local_enemies,
                 int * amount_of_enemies, int * is_fireball, int i)
 {
 		if(*is_fireball == i && !ball->is_imp)
-		    move_fireball(area, ball, is_fireball);
+				move_fireball(area, ball, is_fireball);
 		move_shots(area, shots, amount_of_shots);
 		move_enemies(area, local_enemies, amount_of_enemies);
 }
@@ -95,8 +94,8 @@ generate_enemies_control(block * area, enemies * local_enemies, int  * amount_of
 
 void
 fireball_control(int * is_fb, int i, int * total_score, block_arr area,
-	               enemies enem[10][10], fireball * ball, int amount_of_enemies[10])
+                 enemies enem[10][10], fireball * ball, int amount_of_enemies[10])
 {
 		if (*is_fb == i)
-			  *total_score += verify_fireball(i, area, enem, ball, amount_of_enemies, is_fb);
+				*total_score += verify_fireball(i, area, enem, ball, amount_of_enemies, is_fb);
 }

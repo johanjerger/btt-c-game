@@ -23,6 +23,7 @@ main.o:
 		gcc -c $(SOURCE_FOLDER)/score_table.c -o $(TEMPORAL_FOLDER)/score_table.o $(CFLAG) $(DEBUG)
 		gcc -c $(SOURCE_FOLDER)/game_loop_function.c -o $(TEMPORAL_FOLDER)/game_loop_function.o $(CFLAG) $(DEBUG)
 		gcc -c $(SOURCE_FOLDER)/delete.c -o $(TEMPORAL_FOLDER)/delete.o $(CFLAG) $(DEBUG)
+		gcc -c $(SOURCE_FOLDER)/ranged_integer.c -o $(TEMPORAL_FOLDER)/ranged_integer.o $(CFLAG) $(DEBUG)
 
 clean:
 		-rm -r $(TEMPORAL_FOLDER) $(BUILD_FOLDER)

@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <errno.h>
+#include <time.h>
 #include "include/types.h"
 #include "include/error.h"
 #include "include/function.h"
@@ -34,18 +35,15 @@
 int
 main (void)
 {
-		block_arr area;
-
-		for (int i=0; i != AREA_HEIGHT; i++) initialize_area(area[i]);
-
+		srand(time(NULL)); // random seeds
 		while(true)
 		{
-				int end_level = 1, result = 0;
 				int difficult = menu();
+				int end_level = 1;
 				char player_char = select_player();
 
 				// The game function start the party
-				result = game(area, difficult, &end_level, player_char);
+				int result = game(difficult, &end_level, player_char);
 
 				// This block only show the end result of the party
 				clear();
@@ -57,8 +55,5 @@ main (void)
 
 				// Evaluate if the result deserves be a High Score
 				is_high_score(result, end_level, difficult);
-
-				// We clean the area for another game.
-				for(int i=0; i != AREA_HEIGHT; i++) initialize_area(area[i]);
 		}
 }

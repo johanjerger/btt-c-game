@@ -10,11 +10,9 @@ void horizontal_move(int, block_arr, int, int *, int);
 void move_operations(block *, bullet *, enemies *, fireball *, int *,
 																					int *, int *, int);
 
-void generate_enemies_control(block *, enemies *, int  *, int *, int *,
-																														int *, int *, int *, int, int *, block_arr);
+void generate_enemies_control(block *, enemies *, int  *, int *, int *, int *,
+																														int, int *, block_arr);
 
-void fireball_control(int *, int, int *, block *, block *, block *, enemies *,
-																						enemies *, enemies *, fireball *, int *, int *, int *,
-																						block *);
+void fireball_control(int *, int, int *, block_arr, enemies[10][10], fireball *, int [10]);
 
 #endif

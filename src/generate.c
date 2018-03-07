@@ -22,68 +22,43 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "include/types.h"
+#include "include/function.h"
 
+int enemies_per_level = 100;
 
-int generate_enemies(block * area, enemies * enem, int * cnt_enem,
-                     int * num, int * enem_level, int * e_l, int * time,
+void generate_enemies(block * area, enemies * enem, int * cnt_enem,
+                     int * num, int * time,
                      int * level, int enemy_num, int * time_sleep)
 {
-		int side;
-		int success = 0;
-
 		if(!*num) {
 				//num = rand() % (n - m + 1) + m   ---  [M, N]
 				*num = rand() % (MT - enemy_num) + 1;
 				if(*cnt_enem < MC) {
-						side = rand() % (21) - 10;
-						success = 1;
-						if(side >= 0) {
-								enem[*cnt_enem].pos = 1;
-								enem[*cnt_enem].der = 1;
-								if((area[enem[*cnt_enem].pos+1].c) != '#') {
-										area[enem[*cnt_enem].pos].c = '#';
-								}
-						} else {
-								enem[*cnt_enem].pos = A - 2;
-								enem[*cnt_enem].der = 0;
-								if((area[enem[*cnt_enem].pos-1].c) != '#') {
-										area[enem[*cnt_enem].pos].c = '#';
-								}
-						}
-						if(success) {
-								(*enem_level)--;
-								if(!*enem_level) {
-										*time -= 15;
-										*time_sleep = 1000;
-										(*level)++;
-										*enem_level = (*e_l) * (*level);
-								}
-								(*cnt_enem)++;
+						int side = rand() % (21) - 10;
+						enem[*cnt_enem].pos = (side >= 0) ? 1 : A - 2;
+						enem[*cnt_enem].der = (side >= 0) ? 1 : 0;
+            area[enem[(*cnt_enem)++].pos].c = '#';
+						enemies_per_level--;
+						if(!enemies_per_level) {
+								*time -= 15;
+								*time_sleep = 1000;
+								(*level)++;
+								enemies_per_level = 100 * (*level);
 						}
 				}
-		} else {
-				(*num)--;
-		}
-
-		return 0;
+		} else (*num)--;
 }
 
 
-int generate_shots(block * area, int * c_shots, bullet * shots,
+void generate_shots(block * area, int * cnt_shots, bullet * shots,
                    int act, int handicap, int der)
 {
-		if((area[act+2].c != '-') && (area[act-2].c != '-')) {
-				if(*c_shots < handicap) {
-						shots[*c_shots].der = der;
-						if(shots[*c_shots].der) {
-								shots[*c_shots].pos = act + 1;
-								area[shots[*c_shots].pos].c = '-';
-						} else {
-								shots[*c_shots].pos = act - 1;
-								area[shots[*c_shots].pos].c = '-';
-						}
-						(*c_shots)++;
+    int movement = (der) ? 1 : -1;
+		if(area[act + movement].c != '-') {
+				if(*cnt_shots < handicap) {
+						shots[*cnt_shots].der = der;
+            shots[*cnt_shots].pos = act + movement;
+            area[shots[(*cnt_shots)++].pos].c = '-';
 				}
 		}
-		return 0;
 }

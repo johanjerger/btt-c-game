@@ -23,8 +23,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "include/types.h"
-#include "include/function.h"
-
+#include "include/delete.h"
 
 bool
 verify_collision(int character_position, int possible_collision)
@@ -39,73 +38,36 @@ verify_collision(int character_position, int possible_collision)
 short
 cmp_fireball(block * area, enemies * enem, fireball * ball, int * cnt_enem)
 {
-		short arr_en[MC];
-		int len = 0, points = 0;
-
-		for(int i = 0; i != *cnt_enem; i++) {
-				if (verify_collision(enem[i].pos, ball->pos))
-				{
-						arr_en[len++] = i;
-						points += 100;
-				}
-		}
-		for(int i = 0; i != len; i++) {
-				area[enem[arr_en[i]].pos].c = 'x';
-				for(int j = arr_en[i]; j != *cnt_enem; j++)
-				{
-						enem[j].pos = enem[j+1].pos;
-						enem[j].der = enem[j+1].der;
-				}
-				(*cnt_enem)--;
-		}
-
-		return points;
+    int points = 0;
+    for(int i = 0; i != *cnt_enem; i++) {
+        if (verify_collision(enem[i].pos, ball->pos))
+        {
+            points += 100;
+            area[enem[i].pos].c = 'x';
+            delete_enemy(enem, cnt_enem, i--);
+        }
+    }
+    return points;
 }
-
 
 short
 verify_shots(block * area, enemies * enem, bullet * shots, int * cnt_enem,
-             int * cnt_shots, int handicap)
+             int * cnt_shots)
 {
 		short points = 0;
-		short i, j, k = 0;
-		short arr_en[MC];
-		short arr_sh[handicap];
-		short len = 0;
-
-		for(i = 0; i < *cnt_enem; i++) {
-				for(j = 0; j < *cnt_shots; j++) {
+    for(int i = 0; i != *cnt_enem; i++) {
+				for(int j = 0; j != *cnt_shots; j++) {
 						if (verify_collision(enem[i].pos, shots[j].pos))
 						{
-								arr_en[k] = i;
-								arr_sh[k] = j;
-								len++;
 								points += 100;
-								k++;
+                area[shots[j].pos].c = ' ';
+                delete_shot(shots, cnt_shots, j);
+                area[enem[i].pos].c = ' ';
+                delete_enemy(enem, cnt_enem, i--);
+                break;
 						}
 				}
 		}
-		for(i = 0; i < len; i++) {
-				j = arr_en[i];
-				area[enem[j].pos - i].c = ' ';
-				if(i < MC - 1) {
-						for(k = j; k < (*cnt_enem)-1; k++) {
-								enem[k].pos = enem[k+1].pos;
-								enem[k].der = enem[k+1].der;
-						}
-				}
-				(*cnt_enem)--;
-				j = arr_sh[i];
-				area[shots[j].pos - i].c = ' ';
-				if(i < handicap - 1) {
-						for(k = j; k < (*cnt_shots)-1; k++) {
-								shots[k].pos = shots[k+1].pos;
-								shots[k].der = shots[k+1].der;
-						}
-				}
-				(*cnt_shots)--;
-		}
-
 		return points;
 }
 
@@ -133,78 +95,70 @@ short verify_cheat(char * cheat, char key)
 }
 
 
-short verify_fireball(block * area_act, block * area_top, block * area_lower,
-                      enemies * enem_act, enemies * enem_top, enemies * enem_lower,
-                      fireball * ball, int * cnt_enem_act, int * cnt_enem_top,
-                      int * cnt_enem_lower, int * is_fireball)
+short
+verify_fireball(int position, block_arr area, enemies enem[10][10], fireball * ball,
+								int cnt_enem[10], int * is_fireball)
 {
 		short points = 0;
-		short aux = 0;
+		int low_position = position + 1;
+		int top_position = position - 1;
 		if(ball->mod == 0)
 		{
-				for(int i = 0; i < *cnt_enem_act; i++)
+				for(int i = 0; i < cnt_enem[position]; i++)
 				{
-						if (verify_collision(enem_act[i].pos, ball->pos))
+						if (verify_collision(enem[position][i].pos, ball->pos))
 						{
-								area_act[ball->pos].c = ' ';
+								area[position][ball->pos].c = ' ';
 								ball->is_imp = true;
 								ball->mod = 1;
-								area_act[enem_act[i].pos].c = 'x';
-								ball->pos = enem_act[i].pos;
-								aux = i;
+								area[position][enem[position][i].pos].c = 'x';
+								ball->pos = enem[position][i].pos;
 								points += 150;
+                delete_enemy(enem[position], &(cnt_enem[position]), i--);
 								break;
 						}
 				}
-				if (ball->is_imp) {
-						for (int i = aux; i != *cnt_enem_act; i++)
-						{
-								enem_act[i].pos = enem_act[i+1].pos;
-								enem_act[i].der = enem_act[i+1].der;
-						}
-						(*cnt_enem_act)--;
-				}
 		} else if (ball->mod == 1) {
 				ball->mod = 2;
-				area_act[ball->pos].c = 'x';
-				area_act[ball->pos-1].c = 'x';
-				area_act[ball->pos+1].c = 'x';
-				area_top[ball->pos].c = 'x';
-				area_top[ball->pos+1].c = 'x';
-				area_top[ball->pos-1].c = 'x';
-				if(area_lower->pos != -1) {
-						area_lower[ball->pos].c = 'x';
-						area_lower[ball->pos+1].c = 'x';
-						area_lower[ball->pos-1].c = 'x';
+				area[position][ball->pos].c = 'x';
+				area[position][ball->pos-1].c = 'x';
+				area[position][ball->pos+1].c = 'x';
+				area[top_position][ball->pos].c = 'x';
+				area[top_position][ball->pos+1].c = 'x';
+				area[top_position][ball->pos-1].c = 'x';
+				if (low_position != AREA_HEIGHT - 2) {
+						area[low_position][ball->pos].c = 'x';
+						area[low_position][ball->pos+1].c = 'x';
+						area[low_position][ball->pos-1].c = 'x';
 				}
-				points += cmp_fireball(area_act, enem_act, ball, cnt_enem_act);
-				points += cmp_fireball(area_top, enem_top, ball, cnt_enem_top);
-				if(area_lower->pos != -1) {
-						points += cmp_fireball(area_lower, enem_lower, ball, cnt_enem_lower);
+				points += cmp_fireball(area[position], enem[position], ball, &(cnt_enem[position]));
+				points += cmp_fireball(area[top_position], enem[top_position], ball, &(cnt_enem[top_position]));
+				if(low_position != AREA_HEIGHT - 2) {
+						points += cmp_fireball(area[low_position], enem[low_position], ball, &(cnt_enem[low_position]));
 				}
 
 		} else if(ball->mod == 2) {
 				ball->mod = 3;
-				area_act[ball->pos].c = ' ';
+				area[position][ball->pos].c = ' ';
 
-				points += cmp_fireball(area_act, enem_act, ball, cnt_enem_act);
-				points += cmp_fireball(area_top, enem_top, ball, cnt_enem_top);
-				if(area_lower->pos != -1) {
-						points += cmp_fireball(area_lower, enem_lower, ball, cnt_enem_lower);
+				points += cmp_fireball(area[position], enem[position], ball, &(cnt_enem[position]));
+				points += cmp_fireball(area[top_position], enem[top_position], ball, &(cnt_enem[top_position]));
+				if(low_position != AREA_HEIGHT - 2) {
+						points += cmp_fireball(area[low_position], enem[low_position], ball, &(cnt_enem[low_position]));
 				}
 
 		} else if(ball->mod == 3) {
 				ball->mod = 0;
 				ball->is_imp = 0;
-				area_act[ball->pos-1].c = ' ';
-				area_act[ball->pos+1].c = ' ';
-				area_top[ball->pos].c = ' ';
-				area_top[ball->pos+1].c = ' ';
-				area_top[ball->pos-1].c = ' ';
-				if(area_lower->pos != -1) {
-						area_lower[ball->pos].c = ' ';
-						area_lower[ball->pos+1].c = ' ';
-						area_lower[ball->pos-1].c = ' ';
+				area[position][ball->pos-1].c = ' ';
+				area[position][ball->pos+1].c = ' ';
+				area[top_position][ball->pos].c = ' ';
+				area[top_position][ball->pos+1].c = ' ';
+				area[top_position][ball->pos-1].c = ' ';
+				if(low_position != AREA_HEIGHT - 2) {
+						area[low_position][ball->pos].c = ' ';
+						area[low_position][ball->pos+1].c = ' ';
+						area[low_position][ball->pos-1].c = ' ';
 				}
 				*is_fireball = 0;
 		}

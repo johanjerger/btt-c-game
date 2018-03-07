@@ -35,14 +35,13 @@ static void read_score_table(char * _home, score * imp_table)
 {
 		FILE * score_table;
 		score score_row;
-		short i;
 
 		if((score_table = fopen(_home, "r+")) == NULL) {
 				fprintf(stderr, "error -> %d\n", errno);
 				exit(ERR_OPEN_FILE);
 		}
 
-		for(i = 0; i < TB; i++) {
+		for(int i = 0; i < TB; i++) {
 				if((fread(&score_row.name, 1, sizeof(score_row.name), score_table)) == 0) {
 						fprintf(stderr, "error -> %d\n", EIO);
 						exit(ERR_READ_FILE);

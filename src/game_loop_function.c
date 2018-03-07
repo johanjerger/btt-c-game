@@ -70,7 +70,7 @@ move_operations(block * area, bullet * shots, enemies * local_enemies,
                 int * amount_of_enemies, int * is_fireball, int i)
 {
 		if(*is_fireball == i && !ball->is_imp)
-				move_fireball(area, ball, is_fireball);
+		    move_fireball(area, ball, is_fireball);
 		move_shots(area, shots, amount_of_shots);
 		move_enemies(area, local_enemies, amount_of_enemies);
 }
@@ -78,33 +78,25 @@ move_operations(block * area, bullet * shots, enemies * local_enemies,
 
 void
 generate_enemies_control(block * area, enemies * local_enemies, int  * amount_of_enemies,
-                         int * enemies_time_appearance, int * enemies_per_level,
-                         int * e_l, int * time, int * level, int enemies_number,
+                         int * enemies_time_appearance,
+                         int * time, int * level, int enemies_number,
                          int * time_sleep, block_arr big_area)
 {
-		if (time_sleep)
+		if (*time_sleep)
 		{
 				(*time_sleep)--;
 				if (*time_sleep == 500) level_up_messege(big_area);
 				return;
 		}
-		generate_enemies(area, local_enemies, amount_of_enemies,
-		                 enemies_time_appearance, enemies_per_level, e_l,
+		generate_enemies(area, local_enemies, amount_of_enemies, enemies_time_appearance,
 		                 time, level,enemies_number, time_sleep);
 }
 
 
 void
-fireball_control(int * is_fb, int i, int * total_score,
-                 block * area1, block * area2, block * area3,
-                 enemies * enem1, enemies * enem2, enemies * enem3,
-                 fireball * ball, int * amount_of_enemies1, int * amount_of_enemies2,
-                 int * amount_of_enemies3, block * null_area)
+fireball_control(int * is_fb, int i, int * total_score, block_arr area,
+	               enemies enem[10][10], fireball * ball, int amount_of_enemies[10])
 {
-		if(*is_fb == i) {
-				if(i < (AREA_HEIGHT-1))
-						(*total_score) += verify_fireball(area1, area2, area3, enem1, enem2, enem3, ball, amount_of_enemies1, amount_of_enemies2, amount_of_enemies3, is_fb);
-				else
-						(*total_score) += verify_fireball(area1, area2, null_area, enem1, enem2, enem3, ball, amount_of_enemies1, amount_of_enemies2, amount_of_enemies3, is_fb);
-		}
+		if (*is_fb == i)
+			  *total_score += verify_fireball(i, area, enem, ball, amount_of_enemies, is_fb);
 }

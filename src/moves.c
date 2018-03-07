@@ -19,16 +19,7 @@
 *
 ***************************************************************************/
 #include "include/types.h"
-
-void delete_shot(bullet * shots, int * cnt_shots, int position)
-{
-		for (int i = position; i < *cnt_shots; i++)
-		{
-				shots[i].pos = shots[i+1].pos;
-				shots[i].der = shots[i+1].der;
-		}
-		(*cnt_shots)--;
-}
+#include "include/delete.h"
 
 void move_shots(block * area, bullet * shots, int * cnt_shots)
 {
@@ -40,16 +31,6 @@ void move_shots(block * area, bullet * shots, int * cnt_shots)
 				if (shots[i].pos != cmp_value) area[shots[i].pos].c = '-';
 				else delete_shot(shots, cnt_shots, i--);
 		}
-}
-
-void delete_enemy(enemies * enem, int * cnt_enemies, int position)
-{
-		for (int i = position; i < *cnt_enemies; i++)
-		{
-				enem[i].pos = enem[i+1].pos;
-				enem[i].der = enem[i+1].der;
-		}
-		(*cnt_enemies)--;
 }
 
 void move_enemies(block * area, enemies * enem, int * cnt_enemies)

@@ -38,23 +38,28 @@
 #include "include/game_loop_function.h"
 
 
-int game(block_arr area, int difficult, int * level, char player_char)
+int
+game (int difficult, int * level, char player_char)
 {
-		short pause_option = RESUME, quit = 0;
-		short key, i;
+		short pause_option = RESUME;
+		short key;
 		int actual_position = A/2, actual_row = 1;
 		int cnt_shots[AREA_HEIGHT], cnt_enemies[AREA_HEIGHT];
-		int total_score = 0, num = 5;
+		int points = 0, num = 5;
 		int handicap = 0, direction = 0;
 		int is_cheat = 0, is_fb = 0, time_sleep = 0;
-		int enem_level = 100, e_l = 100, time = 125;
+		int time = 125;
 		char cheat[CH];
 		fireball ball;
 
-		for(i = 0; i < CH - 1; i++) cheat[i] = ' ';
+		// Area initialization
+		block_arr area;
+		for (int i=0; i != AREA_HEIGHT; i++) initialize_area(area[i]);
+
+		for(int i = 0; i < CH - 1; i++) cheat[i] = ' ';
 		cheat[CH-1]= '\0';
 
-		for (i = 0; i != AREA_HEIGHT; i++)
+		for (int i = 0; i != AREA_HEIGHT; i++)
 		{
 				cnt_shots[i] = 0;
 				cnt_enemies[i] = 0;
@@ -72,14 +77,10 @@ int game(block_arr area, int difficult, int * level, char player_char)
 		bullet shots[AREA_HEIGHT][handicap];
 		enemies enem[AREA_HEIGHT][MC];
 
-		// Special area, only for an easy control of the low level verification.
-		block null_area;
-		null_area.pos = -1;
-
 		area[actual_row][actual_position].c = player_char;
 
 		draw(area);
-		printf_footbar(handicap, cnt_shots, actual_row, total_score, level);
+		printf_footbar(handicap, cnt_shots, actual_row, points, level);
 		printf("press 't' for the tutorial or 'q' for exit\n");
 
 		while(true)
@@ -123,34 +124,30 @@ int game(block_arr area, int difficult, int * level, char player_char)
 								{
 										jump(area, &actual_position, direction, player_char, 0);
 
-										for(i = 1; i < AREA_HEIGHT; i++)
+										for(int i = 1; i < AREA_HEIGHT; i++)
 										{
 												move_operations(area[i], shots[i], enem[i], &ball, &(cnt_shots[i]), &(cnt_enemies[i]), &is_fb, i);
-												generate_enemies_control(area[i], enem[i], &(cnt_enemies[i]), &num, &enem_level,
-												                         &e_l, &time, level, enem_number, &time_sleep, area);
-												total_score += verify_shots(area[i], enem[i], shots[i], &(cnt_enemies[i]), &(cnt_shots[i]), handicap);
-												fireball_control(&is_fb, i, &total_score, area[i], area[i-1], area[i+1],
-												                 enem[i], enem[i-1], enem[i+1], &ball, &(cnt_enemies[i]),
-												                 &(cnt_enemies[i-1]), &(cnt_enemies[i+1]), &null_area);
+												generate_enemies_control(area[i], enem[i], &(cnt_enemies[i]), &num,
+												                         &time, level, enem_number, &time_sleep, area);
+												points += verify_shots(area[i], enem[i], shots[i], &(cnt_enemies[i]), &(cnt_shots[i]));
+												fireball_control(&is_fb, i, &points, area, enem, &ball, cnt_enemies);
 										}
 										draw(area);
-										printf_footbar(handicap, cnt_shots, actual_row, total_score, level);
+										printf_footbar(handicap, cnt_shots, actual_row, points, level);
 										_nanosleep(time);
 
 										jump(area, &actual_position, direction, player_char, 1);
 
-										for(i = 1; i < AREA_HEIGHT; i++)
+										for(int i = 1; i < AREA_HEIGHT; i++)
 										{
 												move_operations(area[i], shots[i], enem[i], &ball, &(cnt_shots[i]), &(cnt_enemies[i]), &is_fb, i);
-												generate_enemies_control(area[i], enem[i], &(cnt_enemies[i]), &num, &enem_level,
-												                         &e_l, &time, level, enem_number, &time_sleep, area);
-												total_score += verify_shots(area[i], enem[i], shots[i], &(cnt_enemies[i]), &(cnt_shots[i]), handicap);
-												fireball_control(&is_fb, i, &total_score, area[i], area[i-1], area[i+1],
-												                 enem[i], enem[i-1], enem[i+1], &ball, &(cnt_enemies[i]),
-												                 &(cnt_enemies[i-1]), &(cnt_enemies[i+1]), &null_area);
+												generate_enemies_control(area[i], enem[i], &(cnt_enemies[i]), &num,
+												                         &time, level, enem_number, &time_sleep, area);
+												points += verify_shots(area[i], enem[i], shots[i], &(cnt_enemies[i]), &(cnt_shots[i]));
+												fireball_control(&is_fb, i, &points, area, enem, &ball, cnt_enemies);
 										}
 										draw(area);
-										printf_footbar(handicap, cnt_shots, actual_row, total_score, level);
+										printf_footbar(handicap, cnt_shots, actual_row, points, level);
 										_nanosleep(time);
 
 										jump(area, &actual_position, direction, player_char, 2);
@@ -172,29 +169,26 @@ int game(block_arr area, int difficult, int * level, char player_char)
 								generate_shots(area[actual_row], &(cnt_shots[actual_row]), shots[actual_row], actual_position, handicap, direction);
 								break;
 						case 'p':
-								if (pause_messege(pause_option)) return total_score;
+								if (pause_messege(pause_option)) return points;
 						}
 				}
 
 
 				if(!is_cheat)
 				{
-						for(i = 1; i < AREA_HEIGHT; i++)
+						for(int i = 1; i < AREA_HEIGHT; i++)
 						{
 								move_operations(area[i], shots[i], enem[i], &ball, &(cnt_shots[i]), &(cnt_enemies[i]), &is_fb, i);
 
-								generate_enemies_control(area[i], enem[i], &(cnt_enemies[i]), &num, &enem_level,
-								                         &e_l, &time, level, enem_number, &time_sleep, area);
+								generate_enemies_control(area[i], enem[i], &(cnt_enemies[i]), &num,
+								                         &time, level, enem_number, &time_sleep, area);
 
-								total_score += verify_shots(area[i], enem[i], shots[i], &(cnt_enemies[i]), &(cnt_shots[i]), handicap);
-								fireball_control(&is_fb, i, &total_score, area[i], area[i-1], area[i+1],
-								                 enem[i], enem[i-1], enem[i+1], &ball, &(cnt_enemies[i]),
-								                 &(cnt_enemies[i-1]), &(cnt_enemies[i+1]), &null_area);
-
+								points += verify_shots(area[i], enem[i], shots[i], &(cnt_enemies[i]), &(cnt_shots[i]));
+								fireball_control(&is_fb, i, &points, area, enem, &ball, cnt_enemies);
 								if(actual_row == i)
 								{
-										quit = verify_player(enem[i], area[i], actual_position, cnt_enemies[i]);
-										if (quit) return total_score;
+										if (verify_player(enem[i], area[i], actual_position, cnt_enemies[i]))
+										return points;
 								}
 						}
 				} else {
@@ -214,7 +208,7 @@ int game(block_arr area, int difficult, int * level, char player_char)
 				}
 
 				draw(area);
-				printf_footbar(handicap, cnt_shots, actual_row, total_score, level);
+				printf_footbar(handicap, cnt_shots, actual_row, points, level);
 				_nanosleep(time);
 		}
 }

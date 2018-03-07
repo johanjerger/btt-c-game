@@ -32,9 +32,10 @@
 #include "include/types.h"
 
 
-void clear()
+void
+clear ()
 {
-		if((system("clear")) == -1)
+		if(system("clear") == -1)
 		{
 				fprintf(stderr, "error -> %d\n", errno);
 				exit(ERR_SYS);
@@ -42,20 +43,22 @@ void clear()
 }
 
 //  timespec struct is use for every "sleep" time during the game.
-void _nanosleep(int time)
+void
+_nanosleep (int time)
 {
 		struct timespec ts;
 		ts.tv_sec = time / 1000;
 		ts.tv_nsec = (time % 1000) * 1000000;
 
-		if((nanosleep(&ts, NULL)) == -1)
+		if(nanosleep(&ts, NULL) == -1)
 		{
 				fprintf(stderr, "error -> %d\n", errno);
 				exit(ERR_SYS);
 		}
 }
 
-short getch(void)
+short
+getch (void)
 {
 		struct termios oldattr, newattr;
 		short ch;
@@ -68,7 +71,8 @@ short getch(void)
 		return tolower(ch);
 }
 
-short kbhit(void)
+short
+kbhit (void)
 {
 		struct termios oldt, newt;
 		char ch[20];
@@ -96,7 +100,8 @@ short kbhit(void)
 		return 0;
 }
 
-void initialize_area(block * area)
+void
+initialize_area (block * area)
 {
 		area[0].c = '|';
 		area[0].pos = 0;
@@ -111,7 +116,8 @@ void initialize_area(block * area)
 		area[A].pos = A;
 }
 
-void draw(block_arr area)
+void
+draw (block_arr area)
 {
 		clear();
 		for(int i = 0; i != AREA_HEIGHT; i++)

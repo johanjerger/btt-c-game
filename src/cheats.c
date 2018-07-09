@@ -1,6 +1,6 @@
 /***************************************************************************
 *
-*				 «©Copyright 2016 Juan Cruz Ocampos»
+*				 «©Copyright 2016-2018 Juan Cruz Ocampos»
 *
 *	 This file is part of btt.
 *

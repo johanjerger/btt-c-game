@@ -28,7 +28,7 @@
 #include "include/menu_enums.h"
 #include "include/function.h"
 #include "include/score_table.h"
-#include "include/game_title.h"
+#include "include/game_texts.h"
 
 void printf_menu()
 {
@@ -39,7 +39,9 @@ void printf_menu()
 
 void footbar_menu()
 {
-		printf("\tUse the 'w' & 's' to switch the select option - press " GREEN "ENTER" RESET " to select\n\t\t\t\t\t\t\t  " CYAN "Version %s\n\n" RESET, VERSION);
+		printf("\tUse the 'w' & 's' to switch the select option - press " GREEN
+					 "ENTER" RESET " to select\n\t\t\t\t\t\t\t  " CYAN "Version %s\n\n"
+					 RESET, VERSION);
 }
 
 void cmp_action(int * index, int min_index, int max_index, char comparable,
@@ -57,46 +59,25 @@ void cmp_action(int * index, int min_index, int max_index, char comparable,
 		}
 }
 
+void print_options(const char * options[], int index, int amount)
+{
+		for (int i = 0; i < amount; i++)
+		{
+				if (i == index)
+						printf(YELLOW "\t\t\t\t %s \n" RESET, options[i]);
+				else
+						printf("\t\t\t\t %s \n", options[i]);
+		}
+}
+
 int history(int index)
 {
-		int pages;
-		pages = (int) max_score() /  100;
+		int pages = (int) max_score() /  100;
 		if(pages > 9) pages = 9;
 		clear();
 		printf_menu();
-		switch (index) {
-		case PAGE1:
-				printf("\t\t\tIn the year 2057, an UFO descended\n\t\t\ton planet earth, infecting the entire\n\t\t\tplanet with " RED "cannibal orphans" RESET " with cold\n\t\t\tand mean feelings as a dead elephant.\n\n\t\t\tYou are the " BLUE "choosen one"RESET " to defend\n\t\t\tthe planet from evil " RED "cannibal orphans" RESET ".\n\n\t\t\tGrab your weaponds and go for them!\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
-				break;
-		case PAGE2:
-				printf("\t\t\tTwo months have passed since the\n\t\t\tUFO descended. You and your squad have\n\t\t\tfound small hints indicating that the \n\t\t\t" RED "enemy base" RESET " is nearby.\n\n\t\t\tThe " RED "Cannibal orphans" RESET " have stolen all\n\t\t\tthe mothers of " BLUE "planet earth" RESET ",\n\t\t\tso that at last someone treats\n\t\t\tthem as people, unfortunately, the\n\t\t\tPhaders didn't have the same fate...\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
-				break;
-		case PAGE3:
-				printf("\t\t\tYou finally found the enemy base, looking\n\t\t\tat it from a hill you see how the " RED "cannibal" RESET "\n\t\t\t" RED "orphans" RESET " violently rape the motehrs in\n\t\t\torder to reproduce and dominate \n\t\t\t" BLUE "planet earth" RESET ".\n\n\t\t\tNot only the mothers, You see as there\n\t\t\tare also helpless girls. " BLUE "You an your" RESET "\n\t\t\t" BLUE "squad" RESET " are subjected to hear those\n\t\t\tcries of pain and see that tears.\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
-				break;
-		case PAGE4:
-				printf("\t\t\t\tComing soon,...\n\n\n\n\n\n\n\n\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
-				break;
-		case PAGE5:
-				printf("\t\t\t\tComing soon,...\n\n\n\n\n\n\n\n\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
-				break;
-		case PAGE6:
-				printf("\t\t\t\tComing soon,...\n\n\n\n\n\n\n\n\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
-				break;
-		case PAGE7:
-				printf("\t\t\t\tComing soon,...\n\n\n\n\n\n\n\n\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
-				break;
-		case PAGE8:
-				printf("\t\t\t\tComing soon,...\n\n\n\n\n\n\n\n\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
-				break;
-		case PAGE9:
-				printf("\t\t\t\tComing soon,...\n\n\n\n\n\n\n\n\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
-				break;
-		case PAGE10:
-				printf("\t\t\t\tComing soon,...\n\n\n\n\n\n\n\n\n\n\n\t\t\t\tPress " GREEN "ENTER" RESET "\n");
-				break;
-		}
-		printf("\n\tUse the 'a' & 'd' to switch the differents history pages\t page %d/%d\n", (index) + 1, pages + 1);
+		printf(histories[index]);
+		printf("\n\tUse the 'a' & 'd' to switch the differents history pages\t page %d/%d\n", index + 1, pages + 1);
 		int c = 0;
 		while ( c != 10 && c != 'a' && c != 'd') c = getch();
 		if(c == 10) return 0;
@@ -118,20 +99,9 @@ short start_game_menu(int index)
 {
 		printf_menu();
 		printf("\t\t\t\tSelect Difficulty\n\n");
-		const char * difficults[] = {
-			"Easy",
-			"Normal",
-			"Hard",
-			"Very Hard",
-			"Hopeless"
-		};
-		for (int i = 0; i < 5; i++)
-		{
-				if (i == index)
-						printf(YELLOW "\t\t\t\t %s \n" RESET, difficults[i]);
-				else
-						printf("\t\t\t\t %s \n", difficults[i]);
-		}
+
+		int opt_size = sizeof(difficulties) / sizeof(difficulties[0]);
+		print_options(difficulties, index, opt_size);
 		printf("\n\n");
 		footbar_menu();
 		int c = 0;
@@ -148,39 +118,20 @@ short score_tab_menu(int * actual_score_tab_option, int * actual_score_tab)
 {
 		clear();
 		char _home[1024];
-
 		strcpy(_home, getenv("HOME"));
 		strcat(_home, "/.bttConfig/btt");
-		switch(*actual_score_tab) {
-		case EASY:
-				strcat(_home, "EasyScoreTab");
-				break;
-		case NORMAL:
-				strcat(_home, "NormalScoreTab");
-				break;
-		case HARD:
-				strcat(_home, "HardScoreTab");
-				break;
-		case VERY_HARD:
-				strcat(_home, "VeryHardScoreTab");
-				break;
-		case HOPELESS:
-				strcat(_home, "HopelessScoreTab");
-				break;
-		}
+		strcat(_home, file_names[*actual_score_tab]);
 		score_tab(_home, *actual_score_tab);
-		switch(*actual_score_tab_option) {
-		case MENU:
-				printf(YELLOW "\n\t\t\t       Back to Menu " RESET "\n\t\t\t       Reset Table \n\n\n");
-				break;
-		case CLEAN:
-				printf("\n\t\t\t       Back to Menu \n\t\t\t" YELLOW "       Reset Table \n\n\n" RESET);
-				break;
-		}
+		printf("\n");
+
+		int opt_size = sizeof(score_table_options) / sizeof(score_table_options[0]);
+		print_options(score_table_options, *actual_score_tab_option, opt_size);
+
+		printf("\n\n");
 		printf("\tUse the 'a' & 'd' to switch the differents score tables\n");
 		footbar_menu();
 		int c = 0;
-		while ( c != 10 && c != 's' && c != 'w' && c != 'a' && c != 'd') c = getch();
+		while (c != 10 && c != 's' && c != 'w' && c != 'a' && c != 'd') c = getch();
 		if (c == 10) return 0;
 		cmp_action(actual_score_tab_option, MENU, CLEAN, c, 's', 'w');
 		cmp_action(actual_score_tab, EASY, HOPELESS, c, 'd', 'a');
@@ -193,14 +144,9 @@ bool pause_messege(int index)
 {
 		printf_menu();
 		printf("\n\t\t\t\t" BLUE "   PAUSE" RESET "\n\n");
-		switch(index) {
-		case RESUME:
-				printf(YELLOW "\t\t\t\tResume Game " RESET "\n\t\t\t\tGo to Menu \n\n\n\n");
-				break;
-		case QUIT:
-				printf("\t\t\t\tResume Game \n\t\t\t\t" YELLOW "Go to Menu \n\n\n\n" RESET);
-				break;
-		}
+		int opt_size = sizeof(pause_options) / sizeof(pause_options[0]);
+		print_options(pause_options, index, opt_size);
+		printf("\n\n\n");
 		footbar_menu();
 		int c = 0;
 		while (c != 10 && c != 's' && c != 'w') c = getch();
@@ -217,23 +163,10 @@ short main_menu(int index)
 		int actual_score_tab_option = MENU, actual_score_tab = EASY;
 		char _home[256];
 		printf_menu();
-		switch(index) {
-		case START_GAME:
-				printf(YELLOW "\t\t\t\t Start Game " RESET "\n\t\t\t\t Score Tab \n\t\t\t\t History \n\t\t\t\t Tutorial \n\t\t\t\t Exit \n\n\n\n");
-				break;
-		case SCORE_TAB:
-				printf("\t\t\t\t Start Game \n\t\t\t\t" YELLOW " Score Tab " RESET "\n\t\t\t\t History \n\t\t\t\t Tutorial \n\t\t\t\t Exit \n\n\n\n" RESET);
-				break;
-		case HISTORY:
-				printf("\t\t\t\t Start Game \n\t\t\t\t Score Tab \n\t\t\t\t" YELLOW " History " RESET "\n\t\t\t\t Tutorial \n\t\t\t\t Exit \n\n\n\n" RESET);
-				break;
-		case TUTORIAL:
-				printf("\t\t\t\t Start Game \n\t\t\t\t Score Tab \n\t\t\t\t History \n\t\t\t\t" YELLOW " Tutorial " RESET "\n\t\t\t\t Exit \n\n\n\n" RESET);
-				break;
-		case EXIT:
-				printf("\t\t\t\t Start Game \n\t\t\t\t Score Tab \n\t\t\t\t History \n\t\t\t\t Tutorial \n\t\t\t\t" YELLOW " Exit " RESET "\n\n\n\n" RESET);
-				break;
-		}
+		int opt_size = sizeof(option_names) / sizeof(option_names[0]);
+		print_options(option_names, index, opt_size);
+		printf("\n\n\n");
+
 		footbar_menu();
 		int c = 0;
 		while ( c != 10 && c != 's' && c != 'w') c = getch();
@@ -243,27 +176,11 @@ short main_menu(int index)
 						return start_game_menu(actual_difficulty);
 						break;
 				case SCORE_TAB:
-						score_tab_menu(&actual_score_tab_option, &actual_score_tab);
+						score_tab_menu(&actual_score_tab_option, &actual_score_tab); // TODO loop when you clean a score table
 						if(actual_score_tab_option == CLEAN) {
 								strcpy(_home, getenv("HOME"));
 								strcat(_home, "/.bttConfig/btt");
-								switch(actual_score_tab) {
-								case EASY:
-										strcat(_home, "EasyScoreTab");
-										break;
-								case NORMAL:
-										strcat(_home, "NormalScoreTab");
-										break;
-								case HARD:
-										strcat(_home, "HardScoreTab");
-										break;
-								case VERY_HARD:
-										strcat(_home, "VeryHardScoreTab");
-										break;
-								case HOPELESS:
-										strcat(_home, "HopelessScoreTab");
-										break;
-								}
+								strcat(_home, file_names[actual_score_tab]);
 								create_score_tab(_home);
 						}
 						break;
@@ -275,7 +192,6 @@ short main_menu(int index)
 						break;
 				case EXIT:
 						exit(0);
-						break;
 				}
 		}
 		cmp_action(&index, START_GAME, EXIT, c, 's', 'w');
@@ -288,24 +204,14 @@ short select_player_menu(int index)
 {
 		printf_menu();
 		printf("\t\t\t\tSelect a Player\n\n");
-		char players[] = {'*', '~', '+'};
-		for (int i = 0; i < 3; i++)
-		{
-			if (i == index)
-			 	printf(YELLOW "\t\t\t\t     %c \n" RESET, players[i]);
-			else
-				printf("\t\t\t\t     %c \n", players[i]);
-		}
+		int opt_size = sizeof(players) / sizeof(players[0]);
+		print_options(players, index, opt_size);
 		printf("\n\n\n");
 		footbar_menu();
-
 		int c = 0;
 		while ( c != 10 && c != 's' && c != 'w') c = getch();
-
-		if (c == 10)
-				return (index == FIRST) ? '*' : (index == SECOND) ? '~' : '+';
+		if (c == 10) return (index == FIRST) ? '*' : (index == SECOND) ? '~' : '+';
 		cmp_action(&index, FIRST, THIRD, c, 's', 'w');
-
 		return select_player_menu(index);
 }
 

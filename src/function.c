@@ -31,7 +31,6 @@
 #include "include/error.h"
 #include "include/types.h"
 
-
 void
 clear ()
 {
@@ -42,7 +41,6 @@ clear ()
 		}
 }
 
-//  timespec struct is use for every "sleep" time during the game.
 void
 _nanosleep (int time)
 {
@@ -77,7 +75,6 @@ kbhit (void)
 		struct termios oldt, newt;
 		char ch[20];
 		short oldf;
-
 		tcgetattr(STDIN_FILENO, &oldt);
 		newt = oldt;
 		newt.c_lflag &= ~(ICANON | ECHO);
@@ -89,7 +86,6 @@ kbhit (void)
 				fprintf(stderr, "error -> %d\n", EIO);
 				exit(ERR_READ_SCAN);
 		}
-
 		tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 		fcntl(STDIN_FILENO, F_SETFL, oldf);
 

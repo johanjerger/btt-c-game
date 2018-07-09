@@ -37,7 +37,6 @@
 #include "include/menu.h"
 #include "include/game_loop_function.h"
 
-
 int
 game (int difficult, int * level, char player_char)
 {

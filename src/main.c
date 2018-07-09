@@ -1,6 +1,6 @@
 /***************************************************************************
 *
-*				 «©Copyright 2016 Juan Cruz Ocampos»
+*				 «©Copyright 2016-2018 Juan Cruz Ocampo»
 *
 *	 This file is part of btt.
 *
@@ -35,8 +35,7 @@
 int
 main (void)
 {
-		// random seeds
-		srand(time(NULL));
+		srand(time(NULL)); // random seeds
 		while(true)
 		{
 				int difficult = menu();
